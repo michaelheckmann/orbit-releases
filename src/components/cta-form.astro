@@ -107,9 +107,9 @@ interface Props {
     );
 
     // We don't want people to resubmit the form
-    // form.querySelectorAll("input, button").forEach((element) => {
-    //   element.setAttribute("disabled", "true");
-    // });
+    form.querySelectorAll("input, button").forEach((element) => {
+      element.setAttribute("disabled", "true");
+    });
   };
 
   // Using querySelectorAll is okay here:
