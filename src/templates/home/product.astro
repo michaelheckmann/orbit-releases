@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+
+import { cn } from "@/lib/utils";
+import BulletPoint from "@/components/bullet-point.astro";
+import Title from "@/components/title.astro";
+import fastIcon from "@/assets/fast.png";
+import filterIcon from "@/assets/filter.png";
+import interactIcon from "@/assets/interact.png";
+import performanceIcon from "@/assets/performance.png";
+import productAlt from "@/assets/product-alt.jpg";
+import product from "@/assets/product.jpg";
+import searchIcon from "@/assets/search.png";
+import visualIcon from "@/assets/visual.png";
+---
+
+<section
+  id="product"
+  class={cn("mx-auto max-w-6xl px-4 pt-32", "max-sm:pt-20")}
+>
+  <Title
+    eyebrow="Product"
+    title="How it works"
+    subtitle="Orbit records your Mac's screen activity in the background and stores everything locally. You can then search your screen history by keyword, app name, or timestamp."
+  />
+  <div
+    class={cn(
+      "flex w-full items-center justify-between gap-10 pt-24",
+      "max-lg:flex-col max-lg:items-start max-lg:gap-16 max-lg:pt-16",
+    )}
+  >
+    <ul
+      class={cn(
+        "grid w-full shrink-0 grid-cols-1 gap-10",
+        "sm:grid-cols-2",
+        "lg:w-md lg:grid-cols-1",
+      )}
+    >
+      <BulletPoint
+        image={searchIcon}
+        alt="An icon of a magnifying glass over a document."
+        title="Instant screen history search"
+        description="Find previous content by searching for words, apps, or the time you viewed it."
+      />
+      <BulletPoint
+        image={performanceIcon}
+        alt="An icon of a battery."
+        title="Minimal resource usage"
+        description="Orbit continuously records your screen without impacting performance, using optimized storage and high compression."
+      />
+      <BulletPoint
+        image={interactIcon}
+        alt="An icon of a computer mouse."
+        title="Interactive screen captures"
+        description="Directly copy recorded text, reopen visited URLs, or save individual frames as images."
+      />
+    </ul>
+    <Image
+      src={product}
+      alt="A screenshot of the 'Orbit' app interface. The focus is on a section discussing contextual menus."
+      layout="responsive"
+      class={cn(
+        "max-w-2xl min-w-0 shrink rounded-xl shadow-xl",
+        "max-lg:w-full max-lg:max-w-none",
+      )}
+    />
+  </div>
+  <div
+    class={cn(
+      "flex w-full items-center justify-between gap-10 pt-24",
+      "max-lg:flex-col-reverse max-lg:items-start max-lg:gap-16 max-lg:pt-16",
+    )}
+  >
+    <Image
+      src={productAlt}
+      alt="A screenshot of the 'Orbit' app featuring a PDF viewer. The document displays text on memory, with navigation options visible at the top and a list of recent documents on the left side."
+      layout="responsive"
+      class={cn(
+        "max-w-2xl min-w-0 shrink rounded-xl shadow-xl",
+        "max-lg:w-full max-lg:max-w-none",
+      )}
+    />
+    <ul
+      class={cn(
+        "grid w-full shrink-0 grid-cols-1 gap-10",
+        "sm:grid-cols-2",
+        "lg:w-md lg:grid-cols-1",
+      )}
+    >
+      <BulletPoint
+        image={visualIcon}
+        alt="An icon of a camera."
+        title="Visual timeline navigation"
+        description="Quickly scroll through your screen history using a clear visual timeline. Easily jump to specific dates and times."
+      />
+      <BulletPoint
+        image={filterIcon}
+        alt="An icon of a cube."
+        title="Advanced filtering and querying (planned)"
+        description="More powerful tools for filtering and refining your searches, saving frequent queries, and refining search accuracy are on the roadmap."
+      />
+      <BulletPoint
+        image={fastIcon}
+        alt="An icon of a bolt."
+        title="Fast retrieval at scale"
+        description="Built for speed and reliability, Orbit is designed to instantly retrieve information from months or even years of recordings."
+      />
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+
+import { cn } from "@/lib/utils";
+import CTAForm from "@/components/cta-form.astro";
+import heroImage from "@/assets/hero.jpg";
+---
+
+<section class={cn("mx-auto max-w-6xl px-4", "space-y-6 pt-24")}>
+  <div class="space-y-4">
+    <h1
+      class={cn(
+        "ca-[1px] text-4xl tracking-tight text-balance text-neutral-100",
+        "motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000",
+      )}
+    >
+      Find again what you didn't save.
+    </h1>
+    <h2
+      class={cn(
+        "max-w-lg text-balance",
+        "motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000 motion-delay-100",
+      )}
+    >
+      Orbit records your Mac's screen activity privately in the background,
+      letting you easily search and revisit anything you've ever seen.
+    </h2>
+  </div>
+  <div
+    class="motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000 motion-delay-100"
+  >
+    <CTAForm />
+  </div>
+  <div
+    class={cn(
+      "grid w-full place-items-center pt-32",
+      "max-sm:pt-20",
+      "motion-opacity-in-0 motion-blur-in-xl motion-translate-y-in-[15%] motion-duration-1000 motion-delay-500",
+    )}
+  >
+    <Image
+      src={heroImage}
+      alt="A screenshot of the 'Orbit' app interface displaying a text message. The background features soft, muted colors, and there is a play button and a timestamp at the bottom."
+      class="w-full rounded-xl shadow-xl"
+      layout="responsive"
+      priority
+    />
+  </div>
+</section>

@@ -1,0 +1,22 @@
+{
+  "files.associations": {
+    "wrangler.json": "jsonc"
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/node_modules": true,
+    // "**/dist": true,
+    ".cache": true,
+    ".astro": true,
+    ".wrangler": true
+  }
+}

@@ -1,0 +1,120 @@
+---
+import { cn } from "@/lib/utils";
+
+import Button from "./button.astro";
+import Input from "./input.astro";
+
+interface Props {
+  class?: string;
+}
+---
+
+<form
+  class={cn(
+    "waitlist-form",
+    "flex items-center gap-4",
+    "max-sm:flex-col",
+    Astro.props.class,
+  )}
+  method="post"
+  action="/api/waitlist"
+>
+  <Input
+    name="email"
+    type="email"
+    placeholder="you@email.com"
+    data-1p-ignore
+    required
+    class="max-sm:w-full max-sm:min-w-0"
+  />
+  <div class="relative max-sm:w-full">
+    <Button
+      type="submit"
+      text="Join the Waitlist"
+      class={cn("cta-btn whitespace-nowrap", "max-sm:w-full")}
+    />
+    <p
+      class={cn(
+        "absolute top-12 left-1/2 w-44 -translate-x-1/2 text-center text-sm text-neutral-500",
+        "max-sm:w-full",
+      )}
+    >
+      Free during early access
+    </p>
+  </div>
+</form>
+
+<script>
+  import { actions, isInputError } from "astro:actions";
+
+  import { createToast } from "./toast";
+
+  const handleWaitlistSubmit: EventListener = async (event) => {
+    event.preventDefault();
+    console.log(event);
+
+    const form = event.target as HTMLFormElement;
+
+    const [submitButton] = form.getElementsByTagName("button");
+    submitButton.setAttribute("disabled", "true");
+    submitButton.dataset.isLoading = "true";
+
+    const formData = new FormData(form);
+    const { error } = await actions.joinWaitlist(formData);
+
+    submitButton.removeAttribute("disabled");
+    submitButton.dataset.isLoading = "false";
+
+    if (isInputError(error)) {
+      if (error.fields.email) {
+        const message = error.fields.email[0];
+        createToast(
+          `<div class="flex items-center space-x-2.5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                </svg>
+                <p>${message}</p>
+            </div>`,
+          { timeout: 50000 },
+        );
+        return;
+      }
+    }
+
+    if (error) {
+      createToast(
+        `<div class="flex items-center space-x-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+            </svg>
+            <p>${error}</p>
+        </div>`,
+        { timeout: 50000 },
+      );
+      return;
+    }
+
+    createToast(
+      `<div class="flex items-center space-x-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 shrink-0">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <p>
+                Thanks for joining the waitlist! I'll reach out when I am ready to onboard you.
+            </p>
+        </div>`,
+      { timeout: 50000 },
+    );
+
+    // We don't want people to resubmit the form
+    // form.querySelectorAll("input, button").forEach((element) => {
+    //   element.setAttribute("disabled", "true");
+    // });
+  };
+
+  // Using querySelectorAll is okay here:
+  // https://docs.astro.build/en/guides/client-side-scripts/#common-script-patterns
+  document.querySelectorAll(".waitlist-form").forEach((form) => {
+    form.addEventListener("submit", handleWaitlistSubmit);
+  });
+</script>

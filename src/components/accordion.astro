@@ -1,0 +1,100 @@
+---
+import { cn } from "@/lib/utils";
+
+type AccordionItem = {
+  title: string;
+  content: string;
+  isOpen?: boolean; // Optional: control initial open state
+};
+
+type Props = {
+  items: AccordionItem[];
+  class?: string;
+};
+
+const { items, class: className } = Astro.props;
+---
+
+<div class={cn("space-y-2", className)}>
+  {
+    items.map((item) => (
+      <details class="group" open={item.isOpen}>
+        <summary
+          class={cn(
+            "flex cursor-pointer list-none items-center justify-between py-2 text-pretty",
+            "transition-colors duration-300",
+            "hover:text-neutral-100",
+            "rounded-lg px-2 ring-neutral-100 outline-none focus-visible:ring-1",
+            "group-open:text-neutral-100",
+          )}
+        >
+          {item.title}
+          <svg
+            class="ml-2 size-4 shrink-0 transition-transform duration-300 group-open:rotate-180"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </summary>
+        <div class="accordion-content-wrapper">
+          <div class="px-2 py-4">
+            <Fragment set:html={item.content} />
+          </div>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details > summary::-webkit-details-marker {
+    display: none; /* Hide default marker in Safari */
+  }
+
+  /* --- Modern: Animate content using ::details-content (Chrome 129+) --- */
+  details::details-content {
+    opacity: 0;
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      content-visibility 0.3s allow-discrete,
+      opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+      block-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  details[open]::details-content {
+    opacity: 1;
+    block-size: auto;
+  }
+
+  /* Fallback for browsers without ::details-content */
+  .accordion-content-wrapper {
+    opacity: 0;
+    max-block-size: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1) 0.07s,
+      max-block-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  details[open] > .accordion-content-wrapper {
+    opacity: 1;
+    max-block-size: 100vh; /* Should be larger than your largest content */
+  }
+  @starting-style {
+    details[open] > .accordion-content-wrapper {
+      opacity: 0;
+      max-block-size: 0;
+    }
+  }
+</style>

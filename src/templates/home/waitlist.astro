@@ -1,0 +1,35 @@
+---
+import { cn } from "@/lib/utils";
+import AppIcon from "@/components/app-icon.astro";
+import CTAForm from "@/components/cta-form.astro";
+---
+
+<section
+  id="waitlist"
+  class={cn(
+    "mx-auto max-w-6xl px-4",
+    "flex items-start justify-between gap-10 pt-32",
+    "max-sm:flex-col max-sm:gap-32 max-sm:pt-20",
+    "max-md:items-center max-md:gap-14",
+  )}
+>
+  <div class={cn("shrink-0 space-y-6", "max-lg:shrink")}>
+    <div>
+      <p
+        class="pb-1 font-mono text-sm tracking-[0.125rem] text-neutral-400 uppercase"
+      >
+        Waitlist
+      </p>
+      <h2 class="ca-[1px] pb-4 text-4xl tracking-tight text-neutral-100">
+        Get early access
+      </h2>
+      <p class="max-w-lg">
+        I'm currently offering Orbit as an early-access preview. It's free
+        during this early period, and your feedback will directly shape its
+        future. Simply join below, and I'll contact you soon with details.
+      </p>
+    </div>
+    <CTAForm class="max-lg:[&>input]:min-w-0" />
+  </div>
+  <AppIcon />
+</section>

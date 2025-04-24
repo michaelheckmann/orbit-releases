@@ -1,0 +1,18 @@
+---
+import { Image } from "astro:assets";
+
+import { cn } from "@/lib/utils";
+import staticNoise from "@/assets/static.png";
+---
+
+<Image
+  src={staticNoise}
+  alt=""
+  layout="responsive"
+  class={cn(
+    "absolute inset-0 h-screen w-screen object-cover",
+    "pointer-events-none opacity-5",
+    "mask-radial-from-50% mask-radial-to-70% mask-radial-at-top-left",
+    "mask-b-from-70%",
+  )}
+/>

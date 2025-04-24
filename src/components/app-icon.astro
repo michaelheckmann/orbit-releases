@@ -1,0 +1,59 @@
+---
+import { Image } from "astro:assets";
+
+import { cn } from "@/lib/utils";
+import appIconImage from "@/assets/app-icon.png";
+import iconBlueprint from "@/assets/icon-blueprint.png";
+---
+
+<div
+  class={cn(
+    "relative mx-auto grid w-full place-items-center",
+    "sm:w-auto",
+    "lg:w-full",
+  )}
+>
+  <div
+    class={cn(
+      "absolute top-1/2 left-1/2 size-1/2 -translate-1/2 bg-[#1D50BD] opacity-10 blur-3xl",
+      "motion-preset-pulse-lg motion-duration-[5000ms]",
+    )}
+  >
+  </div>
+  <div
+    class="absolute top-1/2 left-1/2 size-1/2 -translate-1/2 bg-[#285ed2] opacity-10 blur-2xl"
+  >
+  </div>
+  <div
+    class="absolute top-1/2 left-1/2 h-full w-1/2 -translate-1/2 bg-[#4776dc] opacity-5 blur-xl"
+  >
+  </div>
+  <div
+    class={cn(
+      "relative grid size-52 shrink-0 place-items-center overflow-clip rounded-4xl border border-neutral-500/50 bg-neutral-950 shadow-2xl",
+      "sm:size-40",
+      "md:size-52",
+      "lg:size-64",
+    )}
+  >
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-blue-200/3 to-blue-100/1 p-4"
+    >
+      <Image
+        src={iconBlueprint}
+        alt="An abstract graphic featuring geometric shapes and grid lines. The design includes a combination of circles and arcs."
+        layout="responsive"
+        class="size-full grayscale"
+      />
+    </div>
+    <div class="z-10 size-3/4 object-contain">
+      <Image
+        src={appIconImage}
+        alt="An icon representing the 'Orbit' app, featuring a stylized blue and white design."
+        layout="responsive"
+        fit="contain"
+        class="size-full!"
+      />
+    </div>
+  </div>
+</div>

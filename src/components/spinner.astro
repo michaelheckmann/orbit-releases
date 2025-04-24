@@ -1,0 +1,32 @@
+---
+// https://github.com/ephraimduncan/react-svg-spinners/blob/main/src/components/NinetyRing.tsx
+interface Props {
+  strokeWidth?: number;
+  class?: string;
+}
+
+const strokeWidth = Astro.props.strokeWidth ?? 60;
+const r = 400 - strokeWidth;
+---
+
+<svg
+  viewBox="0 0 800 800"
+  xmlns="http://www.w3.org/2000/svg"
+  class={Astro.props.class}
+>
+  <circle
+    cx="400"
+    cy="400"
+    r={r}
+    stroke-width={strokeWidth}
+    stroke-dasharray={`${0.5 * 3.41 * r} ${2 * 3.41 * r}`}
+    stroke-linecap="round"
+  >
+    <animateTransform
+      attributeName="transform"
+      type="rotate"
+      dur="0.9s"
+      values="0 400 400;360 400 400"
+      repeatCount="indefinite"></animateTransform>
+  </circle>
+</svg>
