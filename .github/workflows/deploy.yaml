@@ -12,12 +12,17 @@ jobs:
               uses: pnpm/action-setup@v4
               with:
                   version: 9
+            - name: Install dependencies
+              run: pnpm install
+            - name: Build
+              run: pnpm build
             - name: Deploy
               uses: cloudflare/wrangler-action@v3
               env:
                   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
                   SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
               with:
+                  # This is necessary to have the wrangler.jsonc support
                   wranglerVersion: 4.13.0
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
