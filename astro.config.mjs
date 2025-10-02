@@ -14,7 +14,6 @@ export default defineConfig({
   }),
   vite: { plugins: [tailwindcss()] },
   experimental: {
-    responsiveImages: true,
     fonts: [
       {
         provider: "local",
@@ -46,5 +45,8 @@ export default defineConfig({
         ],
       },
     ],
+  },
+  build: {
+    assetsPrefix: "https://reachorbit-app.b-cdn.net",
   },
 });

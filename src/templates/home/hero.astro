@@ -3,31 +3,32 @@ import { Image } from "astro:assets";
 
 import { cn } from "@/lib/utils";
 import CTAForm from "@/components/cta-form.astro";
-import heroImage from "@/assets/hero.jpg";
+import heroImage from "@/assets/hero.webp";
 ---
 
 <section class={cn("mx-auto max-w-6xl px-4", "space-y-6 pt-24")}>
   <div class="space-y-4">
     <h1
       class={cn(
-        "ca-[1px] text-4xl tracking-tight text-balance text-neutral-100",
-        "motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000",
+        "ca-0.5 text-4xl tracking-[-0.01em] text-balance text-neutral-200",
+        "motion-opacity-in-20 motion-blur-in-lg motion-translate-y-in-100 motion-duration-500",
       )}
     >
-      Find again what you didn't save.
+      Saw it once, find it forever.
     </h1>
     <h2
       class={cn(
-        "max-w-lg text-balance",
-        "motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000 motion-delay-100",
+        "max-w-2xl text-balance",
+        "motion-opacity-in-20 motion-blur-in-lg motion-translate-y-in-100 motion-duration-500",
       )}
     >
-      Orbit records your Mac's screen activity privately in the background,
-      letting you easily search and revisit anything you've ever seen.
+      Orbit records your Mac's screen activity in the background, letting you
+      instantly search and revisit anything you've seen. Everything stays local
+      on your device.
     </h2>
   </div>
   <div
-    class="motion-opacity-in-20 motion-blur-in-xl motion-translate-y-in-100 motion-duration-1000 motion-delay-100"
+    class="motion-opacity-in-20 motion-blur-in-md motion-translate-y-in-100 motion-duration-500 motion-delay-100"
   >
     <CTAForm />
   </div>
@@ -35,14 +36,14 @@ import heroImage from "@/assets/hero.jpg";
     class={cn(
       "grid w-full place-items-center pt-32",
       "max-sm:pt-20",
-      "motion-opacity-in-0 motion-blur-in-xl motion-translate-y-in-[15%] motion-duration-1000 motion-delay-500",
+      "motion-opacity-in-50 motion-blur-in-xl motion-translate-y-in-[15%] motion-duration-500 motion-delay-100",
     )}
   >
     <Image
       src={heroImage}
       alt="A screenshot of the 'Orbit' app interface displaying a text message. The background features soft, muted colors, and there is a play button and a timestamp at the bottom."
       class="w-full rounded-xl shadow-xl"
-      layout="responsive"
+      layout="full-width"
       priority
     />
   </div>

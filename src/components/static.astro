@@ -5,14 +5,38 @@ import { cn } from "@/lib/utils";
 import staticNoise from "@/assets/static.png";
 ---
 
-<Image
-  src={staticNoise}
-  alt=""
-  layout="responsive"
-  class={cn(
-    "absolute inset-0 h-screen w-screen object-cover",
-    "pointer-events-none opacity-5",
-    "mask-radial-from-50% mask-radial-to-70% mask-radial-at-top-left",
-    "mask-b-from-70%",
-  )}
-/>
+<style>
+  @keyframes staticFlicker {
+    0% {
+      opacity: 0.02;
+    }
+    25% {
+      opacity: 0.035;
+    }
+    50% {
+      opacity: 0.04;
+    }
+    75% {
+      opacity: 0.025;
+    }
+    100% {
+      opacity: 0.03;
+    }
+  }
+
+  .static-animation {
+    animation: staticFlicker 2s infinite ease-in-out alternate;
+  }
+</style>
+<div class="motion-opacity-in-0 motion-duration-[10s]">
+  <Image
+    src={staticNoise}
+    alt="Noise"
+    layout="fixed"
+    class={cn(
+      "w-screenobject-cover absolute inset-0 h-screen",
+      "static-animation pointer-events-none",
+      "mask-b-from-70%",
+    )}
+  />
+</div>

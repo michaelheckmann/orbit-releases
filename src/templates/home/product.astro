@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import BulletPoint from "@/components/bullet-point.astro";
 import Title from "@/components/title.astro";
 import fastIcon from "@/assets/fast.png";
+import product from "@/assets/feature-1.webp";
+import productAlt from "@/assets/feature-2.webp";
 import filterIcon from "@/assets/filter.png";
 import interactIcon from "@/assets/interact.png";
 import performanceIcon from "@/assets/performance.png";
-import productAlt from "@/assets/product-alt.jpeg";
-import product from "@/assets/product.jpeg";
 import searchIcon from "@/assets/search.png";
 import visualIcon from "@/assets/visual.png";
 ---
@@ -21,7 +21,7 @@ import visualIcon from "@/assets/visual.png";
   <Title
     eyebrow="Product"
     title="How it works"
-    subtitle="Orbit records your Mac's screen activity in the background and stores everything locally. You can then search your screen history by keyword, app name, or timestamp."
+    subtitle="Orbit continuously records your Mac's screen activity in the background, storing everything locally on your device. Search your entire screen history by keyword, app, or time."
   />
   <div
     class={cn(
@@ -40,25 +40,25 @@ import visualIcon from "@/assets/visual.png";
         image={searchIcon}
         alt="An icon of a magnifying glass over a document."
         title="Instant screen history search"
-        description="Find previous content by searching for words, apps, or the time you viewed it."
-      />
-      <BulletPoint
-        image={performanceIcon}
-        alt="An icon of a battery."
-        title="Minimal resource usage"
-        description="Orbit continuously records your screen without impacting performance, using optimized storage and high compression."
+        description="Find anything by searching for text, app name or the time you viewed it."
       />
       <BulletPoint
         image={interactIcon}
         alt="An icon of a computer mouse."
         title="Interactive screen captures"
-        description="Directly copy recorded text, reopen visited URLs, or save individual frames as images."
+        description="Copy text, reopen URLs, or save frames as images directly from your recordings."
+      />
+      <BulletPoint
+        image={visualIcon}
+        alt="An icon of a camera."
+        title="Visual timeline navigation"
+        description="Scroll through your screen history with an intuitive timeline. Jump to any date or time instantly."
       />
     </ul>
     <Image
       src={product}
       alt="A screenshot of the 'Orbit' app interface. The focus is on a section discussing contextual menus."
-      layout="responsive"
+      layout="full-width"
       class={cn(
         "max-w-2xl min-w-0 shrink rounded-xl shadow-xl",
         "max-lg:w-full max-lg:max-w-none",
@@ -74,7 +74,7 @@ import visualIcon from "@/assets/visual.png";
     <Image
       src={productAlt}
       alt="A screenshot of the 'Orbit' app featuring a PDF viewer. The document displays text on memory, with navigation options visible at the top and a list of recent documents on the left side."
-      layout="responsive"
+      layout="full-width"
       class={cn(
         "max-w-2xl min-w-0 shrink rounded-xl shadow-xl",
         "max-lg:w-full max-lg:max-w-none",
@@ -88,16 +88,16 @@ import visualIcon from "@/assets/visual.png";
       )}
     >
       <BulletPoint
-        image={visualIcon}
-        alt="An icon of a camera."
-        title="Visual timeline navigation"
-        description="Quickly scroll through your screen history using a clear visual timeline. Easily jump to specific dates and times."
+        image={performanceIcon}
+        alt="An icon of a battery."
+        title="Minimal resource usage"
+        description="Orbit continuously records your screen without impacting performance, using optimized storage and high compression."
       />
       <BulletPoint
         image={filterIcon}
         alt="An icon of a cube."
-        title="Advanced filtering and querying (planned)"
-        description="More powerful tools for filtering and refining your searches, saving frequent queries, and refining search accuracy are on the roadmap."
+        title="Import from Rewind"
+        description="Seamlessly migrate your existing Rewind data and continue your screen history without gaps."
       />
       <BulletPoint
         image={fastIcon}

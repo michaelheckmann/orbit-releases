@@ -1,5 +1,4 @@
 ---
-// https://github.com/ephraimduncan/react-svg-spinners/blob/main/src/components/NinetyRing.tsx
 interface Props {
   strokeWidth?: number;
   class?: string;
@@ -15,18 +14,24 @@ const r = 400 - strokeWidth;
   class={Astro.props.class}
 >
   <circle
+    class="origin-center animate-spin"
+    style="transform-origin: 400px 400px"
     cx="400"
     cy="400"
     r={r}
     stroke-width={strokeWidth}
     stroke-dasharray={`${0.5 * 3.41 * r} ${2 * 3.41 * r}`}
-    stroke-linecap="round"
-  >
-    <animateTransform
-      attributeName="transform"
-      type="rotate"
-      dur="0.9s"
-      values="0 400 400;360 400 400"
-      repeatCount="indefinite"></animateTransform>
-  </circle>
+    stroke-linecap="round"></circle>
 </svg>
+
+<style>
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-spin {
+    animation: spin 0.9s linear infinite;
+  }
+</style>

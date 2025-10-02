@@ -11,13 +11,12 @@
     "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.5.1",
+    "@astrojs/cloudflare": "^12.6.9",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.1.4",
-    "astro": "^5.7.5",
+    "astro": "^5.14.1",
     "clsx": "^2.1.1",
-    "fast-average-color-node": "^3.1.0",
-    "sharp": "0.32.6",
+    "sharp": "0.34.4",
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^4.1.4"
   },

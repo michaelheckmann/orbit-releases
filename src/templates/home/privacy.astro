@@ -34,21 +34,21 @@ import privacy from "@/assets/privacy.png";
     >
       <BulletPoint
         image={localIcon}
-        alt="An icon of a house."
+        alt="An icon of a folder."
         title="Local data storage"
-        description="Orbit stores your recordings and data exclusively on your Mac, with no uploads to external servers."
+        description="All recordings and data stay exclusively on your Mac. Nothing is ever uploaded to external servers."
       />
       <BulletPoint
         image={encryptionIcon}
         alt="An icon of a set of keys."
-        title="Strong encryption & data controls"
-        description="Your app database is already encrypted. Encrypting screen recordings and easy export or deletion options are next."
+        title="Encrypted & under your control"
+        description="Your database is encrypted by default. Full recording encryption, easy export, and one-click deletion are coming next."
       />
       <BulletPoint
         image={independentIcon}
         alt="An icon showing a collection of tools."
         title="Independently developed"
-        description="Orbit is created by me, an independent developer building an app I find personally useful. There's no external funding, data selling, or hidden interests."
+        description="Created by an independent developer with no external funding, data selling, or hidden agendas."
       />
     </ul>
     <div
@@ -60,9 +60,11 @@ import privacy from "@/assets/privacy.png";
       <Image
         src={privacy}
         alt="An abstract illustration of a hand holding a key, set against a speckled background. The design features a monochrome color scheme, emphasizing the shape and form of the hand and object."
-        layout="responsive"
-        fit="contain"
-        class={cn("h-full!", "motion-opacity-loop-90 motion-duration-[5000ms]")}
+        layout="full-width"
+        class={cn(
+          "h-full! object-contain",
+          "motion-opacity-loop-90 motion-duration-[5000ms]",
+        )}
       />
     </div>
   </div>

@@ -30,20 +30,55 @@ import Accordion from "@/components/accordion.astro";
     <Accordion
       items={[
         {
-          title: "Does Orbit impact my Mac's performance or battery?",
+          title: "How much storage does this actually use?",
           content:
-            "No, Orbit is designed to run quietly in the background with minimal resource impact. It doesn't noticeably slow down your Mac or significantly drain battery power.",
+            "Orbit uses approximately 15 GB per month of recordings. This is an estimate and may vary depending on what you're recording, but it's a good benchmark to plan around.",
           isOpen: true,
         },
         {
-          title: "What happens if I run out of storage?",
+          title: "Can I exclude certain apps or websites from being recorded?",
           content:
-            "Orbit stores recordings in an optimized format that balances usefulness and storage requirements. You'll be able to choose how much disk space Orbit uses and it intelligently manages storage by automatically discarding old data once your limit is reached.",
+            "Yes. You can define excluded apps in a dropdown menu in the settings. Website exclusion is coming soon.",
         },
         {
-          title: "Do I need an internet connection all the time?",
+          title: "How far back can I search?",
           content:
-            "No, Orbit only briefly connects to verify your license at startup. After that, everything it does stays offline, completely local to your device.",
+            "You can store up to one year of recordings. In the future, you'll also be able to mark specific days as important and persist those recordings for longer.",
+        },
+        {
+          title: "Does this work across multiple monitors?",
+          content:
+            "Yes. Orbit records whichever monitor your cursor is on. If you have a multi-monitor setup, it automatically switches between them based on where you're actively working.",
+        },
+        {
+          title: "Can other people access my recordings if they use my Mac?",
+          content:
+            "Your recordings are stored in your user folder. If someone is logged in under your username, they can open the app and view your recordings. Make sure to use separate user accounts if you share your Mac.",
+        },
+        {
+          title: "How is this different from Rewind?",
+          content:
+            "Orbit focuses on speed and powerful search capabilities. I'm building advanced filtering and complex queries so you can combine logical expressions, filter by app metadata, and narrow down searches precisely. Think of it as Command+F for your entire screen history. I'm also prioritizing performance over experimental features, keeping the tool lightweight and fast.",
+        },
+        {
+          title: "Why is it free right now?",
+          content:
+            "It's free during early access because I need your feedback to shape the product. This is an alpha version, so you'll encounter bugs and rough edges. In exchange for using it free, I'm asking you to help improve it. Once it's more polished, it will be a paid app. There's no investor money behind this, so I need to fund development sustainably.",
+        },
+        {
+          title: "Can I pause recording temporarily?",
+          content:
+            "Yes. You can toggle recording on and off directly from the menu bar.",
+        },
+        {
+          title: "Is the search actually good?",
+          content:
+            "The search is powered by Apple's on-device machine learning, the same technology that lets you select text inside images on your Mac. The OCR is reliable and works well with most text. Right now you can search by text, with metadata, app name, and website filtering coming soon.",
+        },
+        {
+          title: "What if my Mac crashes or restarts?",
+          content:
+            "You might lose a few seconds of recording, but Orbit uses checkpoints to minimize data loss. You won't lose significant amounts of your screen history.",
         },
       ]}
     />

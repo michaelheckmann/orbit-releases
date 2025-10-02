@@ -1,0 +1,51 @@
+---
+import { cn } from "@/lib/utils";
+
+const ringSizes = {
+  inner: 0.33,
+  middle: 0.66,
+  outer: 1,
+};
+
+// Precomputed tangent point P:
+const px = 14.65; // %
+const py = 85.35; // %
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class="relative size-full">
+  {
+    Object.values(ringSizes).map((s) => {
+      const r = s * 50; // radius in %, i.e. (s/2)*100
+      // r·unit = r * (√2/2):
+      const ru = r * Math.SQRT1_2;
+
+      // center coords in %:
+      const cx = px + ru;
+      const cy = py - ru;
+
+      // top/left of bounding box:
+      const left = cx - r;
+      const top = cy - r;
+      return (
+        <div
+          class={cn(
+            "border-text-secondary absolute rounded-full border-[1.5px]",
+            className,
+          )}
+          style={{
+            width: `${s * 100}%`,
+            height: `${s * 100}%`,
+            left: `${left}%`,
+            top: `${top}%`,
+          }}
+        />
+      );
+    })
+  }
+</div>
