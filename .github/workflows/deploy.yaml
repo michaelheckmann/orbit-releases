@@ -23,7 +23,7 @@ jobs:
                   SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
               with:
                   # This is necessary to have the wrangler.jsonc support
-                  wranglerVersion: 4.13.0
+                  wranglerVersion: 4.40.3
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
                   packageManager: pnpm
