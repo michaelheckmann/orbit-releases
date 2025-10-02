@@ -8,14 +8,14 @@ jobs:
         name: Deploy to Cloudflare Worker
         steps:
             - uses: actions/checkout@v4
-            - name: Setup pnpm
-              uses: pnpm/action-setup@v4
+            - name: Setup bun
+              uses: oven-sh/setup-bun@v2
               with:
-                  version: 9
+                  bun-version: latest
             - name: Install dependencies
-              run: pnpm install
+              run: bun install
             - name: Build
-              run: pnpm build
+              run: bun run build
             - name: Deploy
               uses: cloudflare/wrangler-action@v3
               env:
@@ -26,7 +26,7 @@ jobs:
                   wranglerVersion: 4.40.3
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                  packageManager: pnpm
+                  packageManager: bun
                   secrets: |
                       SUPABASE_URL
                       SUPABASE_SECRET_KEY
