@@ -18,6 +18,7 @@ jobs:
                   SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
                   SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
               with:
+                  wranglerVersion: 4.13.0
                   apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
                   accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
                   packageManager: pnpm
