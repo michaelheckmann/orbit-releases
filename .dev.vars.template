@@ -1,2 +1,6 @@
 SUPABASE_URL=https://xxx.supabase.co
 SUPABASE_SECRET_KEY=your_service_role_key
+
+RESEND_API_KEY=re_your_resend_api_key_here
+RESEND_SENDER_EMAIL=your_sender_email@yourdomain.com
+RESEND_RECEIVER_EMAIL=your_receiver_email@yourdomain.com

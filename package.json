@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && wrangler deploy"
+    "deploy": "astro build && wrangler deploy",
+    "types": "wrangler types"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.9",
@@ -16,6 +17,7 @@
     "@tailwindcss/vite": "^4.1.14",
     "astro": "^5.14.1",
     "clsx": "^2.1.1",
+    "resend": "^6.1.2",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14"
   },

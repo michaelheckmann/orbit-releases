@@ -1,32 +1,38 @@
 name: Deploy
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        name: Deploy to Cloudflare Worker
-        steps:
-            - uses: actions/checkout@v4
-            - name: Setup bun
-              uses: oven-sh/setup-bun@v2
-              with:
-                  bun-version: latest
-            - name: Install dependencies
-              run: bun install
-            - name: Build
-              run: bun run build
-            - name: Deploy
-              uses: cloudflare/wrangler-action@v3
-              env:
-                  SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-                  SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
-              with:
-                  # This is necessary to have the wrangler.jsonc support
-                  wranglerVersion: 4.40.3
-                  apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-                  accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-                  packageManager: bun
-                  secrets: |
-                      SUPABASE_URL
-                      SUPABASE_SECRET_KEY
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Worker
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        run: bun install
+      - name: Build
+        run: bun run build
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_SENDER_EMAIL: ${{ secrets.RESEND_SENDER_EMAIL }}
+          RESEND_RECEIVER_EMAIL: ${{ secrets.RESEND_RECEIVER_EMAIL }}
+        with:
+          # This is necessary to have the wrangler.jsonc support
+          wranglerVersion: 4.40.3
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: bun
+          secrets: |
+            SUPABASE_URL
+            SUPABASE_SECRET_KEY
+            RESEND_API_KEY
+            RESEND_SENDER_EMAIL
+            RESEND_RECEIVER_EMAIL

@@ -1,6 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
 export const server = {
   joinWaitlist: defineAction({
@@ -29,6 +30,24 @@ export const server = {
       if (res.status !== 201) {
         throw new Error("Failed to join the waitlist");
       }
+
+      // Send confirmation email non-blocking
+      context.locals.runtime.ctx.waitUntil(
+        (async () => {
+          try {
+            const resend = new Resend(env.RESEND_API_KEY);
+            await resend.emails.send({
+              from: env.RESEND_SENDER_EMAIL,
+              to: env.RESEND_RECEIVER_EMAIL,
+              subject: "New Waitlist Signup",
+              html: `<p>New user joined the waitlist:</p><p><strong>Email:</strong> ${email}</p><p><strong>Time:</strong> ${new Date().toLocaleString()}</p>`,
+            });
+          } catch (error) {
+            // Log error but don't fail the request
+            console.error("Failed to send email:", error);
+          }
+        })(),
+      );
 
       return true;
     },
