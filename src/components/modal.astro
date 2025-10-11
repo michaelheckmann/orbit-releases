@@ -1,0 +1,134 @@
+---
+interface Props {
+  id: string;
+  title?: string;
+  class?: string;
+}
+
+const { id, title, class: className } = Astro.props;
+---
+
+<style>
+  dialog {
+    opacity: 0;
+    transition:
+      opacity 0.2s ease-out,
+      overlay 0.2s ease-out allow-discrete,
+      display 0.2s ease-out allow-discrete;
+  }
+
+  dialog:open {
+    opacity: 1;
+  }
+
+  @starting-style {
+    dialog:open {
+      opacity: 0;
+    }
+  }
+
+  dialog::backdrop {
+    background-color: transparent;
+    transition:
+      display 0.2s allow-discrete,
+      overlay 0.2s allow-discrete,
+      background-color 0.2s;
+  }
+
+  dialog:open::backdrop {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  @starting-style {
+    dialog:open::backdrop {
+      background-color: transparent;
+    }
+  }
+
+  dialog .content::-webkit-scrollbar {
+    background-color: var(--color-neutral-850);
+    width: 15px;
+  }
+
+  dialog .content::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.28);
+    border-radius: 10px;
+    border-top: 3px solid var(--color-neutral-850);
+    border-bottom: 4px solid var(--color-neutral-850);
+    border-left: 3.5px solid var(--color-neutral-850);
+    border-right: 3.5px solid var(--color-neutral-850);
+  }
+</style>
+<dialog
+  id={id}
+  class:list={[
+    "m-auto w-full max-w-[90vw] overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-[#141414] p-0 text-neutral-400 shadow-2xl",
+    "border border-white/10 inset-shadow-sm",
+    "md:max-w-2xl",
+    "max-h-[90dvh]",
+    className,
+  ]}
+>
+  <div class="flex min-h-0 flex-col" style="max-height: inherit">
+    {
+      title && (
+        <div class="flex items-center justify-between border-b border-white/10 p-6">
+          <h2 class="text-lg font-medium">{title}</h2>
+          <button
+            class:list={[
+              "text-neutral-400 transition-colors hover:text-neutral-200",
+              "rounded ring-neutral-500 ring-offset-4 ring-offset-neutral-900 outline-none focus-visible:text-neutral-400 focus-visible:ring-1",
+            ]}
+            onclick={`document.getElementById('${id}').close()`}
+          >
+            <svg
+              class="size-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      )
+    }
+    <div class="content min-h-0 flex-1 overflow-y-auto overscroll-contain p-6">
+      <slot />
+    </div>
+  </div>
+</dialog>
+
+<script is:inline define:vars={{ id }}>
+  // Make the modal closeable by clicking the backdrop
+  const dialog = document.getElementById(id);
+  dialog?.addEventListener("click", (e) => {
+    const rect = dialog.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    ) {
+      dialog.close();
+    }
+  });
+
+  const openButton = document.getElementById(`open-${id}`);
+  openButton?.addEventListener("click", () => {
+    dialog.showModal();
+  });
+
+  const closeButton = document.getElementById(`close-${id}`);
+  closeButton?.addEventListener("click", () => {
+    dialog.close();
+  });
+
+  // For debugging and styling, open the modal by default
+  // dialog.showModal();
+</script>

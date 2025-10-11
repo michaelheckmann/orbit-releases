@@ -3,17 +3,20 @@ import { cn } from "@/lib/utils";
 
 import Button from "./button.astro";
 import Input from "./input.astro";
+import Modal from "./modal.astro";
 import Spinner from "./spinner.astro";
 
 interface Props {
   class?: string;
 }
+
+const randomId = Math.random().toString(36).slice(2, 11);
 ---
 
 <form
   class={cn(
     "waitlist-form",
-    "flex items-center gap-4",
+    "flex items-start gap-4",
     "max-sm:flex-col",
     Astro.props.class,
   )}
@@ -28,7 +31,7 @@ interface Props {
     required
     class="max-sm:w-full max-sm:min-w-0"
   />
-  <div class="relative max-sm:w-full">
+  <div class="relative flex flex-col items-center max-sm:w-full">
     <Button
       type="submit"
       data-is-loading="false"
@@ -53,16 +56,46 @@ interface Props {
         <span>Joining...</span>
       </div>
     </Button>
-    <p
+    <div
       class={cn(
-        "absolute top-12 left-1/2 w-44 -translate-x-1/2 text-center text-sm text-neutral-500",
+        "flex w-44 flex-col items-center justify-center pt-2",
         "max-sm:w-full",
+        "text-center text-sm text-neutral-500",
       )}
     >
-      Free during early access
-    </p>
+      <p>Free during early access</p>
+      <button
+        id={`open-early-access-${randomId}`}
+        type="button"
+        class={cn(
+          "cursor-help text-neutral-600 underline decoration-neutral-600 decoration-dotted underline-offset-2",
+          "transition-colors hover:text-neutral-500",
+          "rounded-xs ring-neutral-500 ring-offset-4 ring-offset-neutral-900 outline-none focus-visible:text-neutral-500 focus-visible:ring-1",
+        )}
+      >
+        Learn more
+      </button>
+    </div>
   </div>
 </form>
+<Modal id={`early-access-${randomId}`} title="About early access">
+  I'm releasing this early to get feedback that helps guide development. I'm
+  looking for people who'll actually tell me what's working and what isn't.
+  <br />
+  <br />
+  If things break or feel off, let me know and I'll handle it quickly. This phase
+  will last a few months, and I'll give clear notice before moving to a paid model.
+  Early users will get a special discount when that happens.
+  <br />
+  <br />
+  Questions? Reach me at <a
+    href="mailto:hello@heckmann.app"
+    class:list={[
+      "underline decoration-neutral-700 underline-offset-2 transition-colors hover:text-neutral-300 hover:decoration-neutral-600",
+      "rounded-xs ring-neutral-500 ring-offset-4 ring-offset-neutral-900 outline-none focus-visible:text-neutral-400 focus-visible:ring-1",
+    ]}>hello@heckmann.app</a
+  >
+</Modal>
 
 <script>
   import { actions, isInputError } from "astro:actions";
