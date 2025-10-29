@@ -2,6 +2,7 @@
 import Footer from "@/components/layout/footer.astro";
 import Layout from "@/components/layout/layout.astro";
 import Nav from "@/components/layout/nav.astro";
+import StructuredData from "@/components/layout/structured-data.astro";
 import Static from "@/components/static.astro";
 import Faq from "@/templates/home/faq.astro";
 import Hero from "@/templates/home/hero.astro";
@@ -14,6 +15,7 @@ import Waitlist from "@/templates/home/waitlist.astro";
   title="Orbit – Privately Record and Search Your Mac's Screen History"
   description="Orbit quietly and privately records your Mac's screen activity, making everything you've seen searchable. Quickly find lost content by keyword, app, or date—all data stored securely on your device."
 >
+  <StructuredData slot="head" />
   <Static />
   <Nav />
   <Hero />

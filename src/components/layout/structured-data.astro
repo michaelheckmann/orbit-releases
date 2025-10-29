@@ -1,0 +1,125 @@
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://heckmann.app/",
+        "name": "Michael Heckmann Software Studio",
+        "url": "https://heckmann.app/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://heckmann.app/web-app-manifest-512x512.png",
+          "width": 512,
+          "height": 512
+        },
+        "founder": {
+          "@type": "Person",
+          "name": "Michael Heckmann"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "hello@heckmann.app",
+          "contactType": "Customer Support"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://reachorbit.app/",
+        "name": "Orbit",
+        "alternateName": "Orbit – Privately Record and Search Your Mac's Screen History",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "macOS",
+        "description": "Orbit records your Mac's screen activity in the background, letting you instantly search and revisit anything you've seen. Everything stays local on your device.",
+        "url": "https://reachorbit.app/",
+        "image": "https://reachorbit.app/app-icon.png",
+        "screenshot": "https://reachorbit.app/screenshot.png",
+        "provider": {
+          "@id": "https://heckmann.app/"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Michael Heckmann"
+        },
+        "releaseNotes": "https://github.com/michaelheckmann/orbit-releases/releases",
+        "softwareRequirements": "macOS 14.0 or later",
+        "storageRequirements": "Approximately 15 GB per month of recordings",
+        "featureList": [
+          "Instant screen history search by text, app name, or time",
+          "Interactive screen captures with text copying and URL reopening",
+          "Scrollable timeline interface",
+          "Minimal resource usage with optimized storage",
+          "Import from Rewind",
+          "Fast retrieval at scale",
+          "Local data storage (nothing uploaded to external servers)",
+          "Encrypted database and recordings",
+          "Multi-monitor support",
+          "On-device machine learning powered OCR",
+          "Continuous background recording"
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://reachorbit.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "How much storage does this actually use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Orbit uses approximately 15 GB per month of recordings. This is an estimate and may vary depending on what you're recording."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I exclude certain apps from being recorded?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. You can define excluded apps in a dropdown menu in the settings."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How far back can I search?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "There is currently no limit to how far back you can search. You can revisit anything you've seen since installing the app. In the future, you'll also be able to set a custom retention period and mark specific days as important and persist those recordings for longer."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this work across multiple monitors?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Orbit records whichever monitor your cursor is on. If you have a multi-monitor setup, it automatically switches between them based on where you're actively working."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How is this different from Rewind AI?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Orbit focuses on speed and powerful search capabilities. I'm building advanced filtering and complex queries so you can combine logical expressions, filter by app metadata, and narrow down searches precisely. Think of it as Command+F for your entire screen history. I'm also prioritizing performance over experimental features, keeping the tool lightweight and fast."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is the search actually good?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The search is powered by Apple's on-device machine learning, the same technology that lets you select text inside images on your Mac. The OCR is reliable and works well with most text. Right now you can search by text, with metadata, app name, and website filtering coming soon."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What if my Mac crashes or restarts?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You might lose a few seconds of recording, but Orbit uses checkpoints to minimize data loss. You won't lose significant amounts of your screen history."
+            }
+          }
+        ]
+      }
+    ]
+  }
+</script>
