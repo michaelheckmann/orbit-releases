@@ -1,13 +1,12 @@
 ---
-import { Image } from "astro:assets";
-
 import { cn } from "@/lib/utils";
 import BulletPoint from "@/components/bullet-point.astro";
 import Title from "@/components/title.astro";
 import encryptionIcon from "@/assets/encryption.png";
 import independentIcon from "@/assets/independent.png";
 import localIcon from "@/assets/local.png";
-import privacy from "@/assets/privacy.png";
+import privacyVideoHigh from "@/assets/privacy-high.mp4";
+import privacyVideoLow from "@/assets/privacy-low.mp4";
 ---
 
 <section
@@ -54,18 +53,28 @@ import privacy from "@/assets/privacy.png";
     <div
       class={cn(
         "relative -left-12 -mt-32 w-lg min-w-0 shrink-0 object-contain",
-        "max-lg:left-0 max-lg:mt-0 max-lg:h-96 max-lg:w-full",
+        "max-lg:left-0 max-lg:mt-0 max-lg:h-122 max-lg:w-full",
       )}
     >
-      <Image
-        src={privacy}
-        alt="An abstract illustration of a hand holding a key, set against a speckled background. The design features a monochrome color scheme, emphasizing the shape and form of the hand and object."
-        layout="full-width"
-        class={cn(
-          "h-full! object-contain",
-          "motion-opacity-loop-90 motion-duration-[5000ms]",
-        )}
-      />
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        disablepictureinpicture
+        preload="metadata"
+        aria-hidden="true"
+        class="mx-auto h-full mix-blend-screen"
+      >
+        <!-- Low bandwidth version for mobile connections-->
+        <source
+          src={privacyVideoLow}
+          type="video/mp4"
+          media="(max-width: 1024px)"
+        />
+        <!-- High bandwidth version for desktop -->
+        <source src={privacyVideoHigh} type="video/mp4" />
+      </video>
     </div>
   </div>
 </section>
