@@ -9,48 +9,58 @@ const { id, title, class: className } = Astro.props;
 ---
 
 <style>
-  dialog {
+  .modal-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     opacity: 0;
-    transition:
-      opacity 0.2s ease-out,
-      overlay 0.2s ease-out allow-discrete,
-      display 0.2s ease-out allow-discrete;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
   }
 
-  dialog:open {
+  .modal-wrapper[data-open="true"] {
     opacity: 1;
+    pointer-events: auto;
   }
 
-  @starting-style {
-    dialog:open {
-      opacity: 0;
-    }
-  }
-
-  dialog::backdrop {
-    background-color: transparent;
-    transition:
-      display 0.2s allow-discrete,
-      overlay 0.2s allow-discrete,
-      background-color 0.2s;
-  }
-
-  dialog:open::backdrop {
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
   }
 
-  @starting-style {
-    dialog:open::backdrop {
-      background-color: transparent;
-    }
+  .modal-content-wrapper {
+    position: relative;
+    z-index: 10;
+    transform: translateY(-20px);
+    opacity: 0.5;
+    transition:
+      transform 2s,
+      opacity 0.2s;
   }
 
-  dialog .content::-webkit-scrollbar {
+  .modal-wrapper[data-open="true"] .modal-content-wrapper {
+    transform: translateY(0);
+    opacity: 1;
+    transition:
+      transform 0.3s ease-out,
+      opacity 0.3s ease-out;
+  }
+
+  .modal-content-wrapper .content::-webkit-scrollbar {
     background-color: var(--color-neutral-850);
     width: 15px;
   }
 
-  dialog .content::-webkit-scrollbar-thumb {
+  .modal-content-wrapper .content::-webkit-scrollbar-thumb {
     background-color: rgba(255, 255, 255, 0.28);
     border-radius: 10px;
     border-top: 3px solid var(--color-neutral-850);
@@ -59,76 +69,116 @@ const { id, title, class: className } = Astro.props;
     border-right: 3.5px solid var(--color-neutral-850);
   }
 </style>
-<dialog
+<div
   id={id}
-  class:list={[
-    "m-auto w-full max-w-[90vw] overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-[#141414] p-0 text-neutral-400 shadow-2xl",
-    "border border-white/10 inset-shadow-sm",
-    "md:max-w-2xl",
-    "max-h-[90dvh]",
-    className,
-  ]}
+  class="modal-wrapper"
+  data-open="false"
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
 >
-  <div class="flex min-h-0 flex-col" style="max-height: inherit">
-    {
-      title && (
-        <div class="flex items-center justify-between border-b border-white/10 p-6">
-          <h2 class="text-lg font-medium">{title}</h2>
-          <button
-            class:list={[
-              "text-neutral-400 transition-colors hover:text-neutral-200",
-              "rounded ring-neutral-500 ring-offset-4 ring-offset-neutral-900 outline-none focus-visible:text-neutral-400 focus-visible:ring-1",
-            ]}
-            onclick={`document.getElementById('${id}').close()`}
-          >
-            <svg
-              class="size-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+  <div class="modal-backdrop"></div>
+  <div
+    class:list={[
+      "modal-content-wrapper",
+      "m-auto w-full max-w-[90vw] overflow-hidden rounded-xl bg-gradient-to-b from-neutral-900 to-[#141414] p-0 text-neutral-400 shadow-2xl",
+      "border border-white/10 inset-shadow-sm",
+      "md:max-w-2xl",
+      "max-h-[90dvh]",
+      className,
+    ]}
+  >
+    <div class="flex min-h-0 flex-col" style="max-height: inherit">
+      {
+        title && (
+          <div class="flex items-center justify-between border-b border-white/10 p-6">
+            <h2 class="text-lg font-medium">{title}</h2>
+            <button
+              class:list={[
+                "modal-close-button",
+                "text-neutral-400 transition-colors hover:text-neutral-200",
+                "rounded ring-neutral-500 ring-offset-4 ring-offset-neutral-900 outline-none focus-visible:text-neutral-400 focus-visible:ring-1",
+              ]}
+              aria-label="Close modal"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      )
-    }
-    <div class="content min-h-0 flex-1 overflow-y-auto overscroll-contain p-6">
-      <slot />
+              <svg
+                class="size-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        )
+      }
+      <div
+        class="content min-h-0 flex-1 overflow-y-auto overscroll-contain p-6"
+      >
+        <slot />
+      </div>
     </div>
   </div>
-</dialog>
+</div>
 
 <script is:inline define:vars={{ id }}>
-  // Make the modal closeable by clicking the backdrop
-  const dialog = document.getElementById(id);
-  dialog?.addEventListener("click", (e) => {
-    const rect = dialog.getBoundingClientRect();
-    if (
-      e.clientX < rect.left ||
-      e.clientX > rect.right ||
-      e.clientY < rect.top ||
-      e.clientY > rect.bottom
-    ) {
-      dialog.close();
+  (function () {
+    const modal = document.getElementById(id);
+    if (!modal) return;
+
+    // Move modal to body to escape any containing blocks created by transforms
+    document.body.appendChild(modal);
+
+    const backdrop = modal.querySelector(".modal-backdrop");
+    const closeButton = modal.querySelector(".modal-close-button");
+
+    function openModal() {
+      // Calculate scrollbar width before hiding it
+      const scrollbarWidth =
+        window.innerWidth - document.documentElement.clientWidth;
+
+      modal.setAttribute("data-open", "true");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+
+      // Add padding to prevent layout shift
+      if (scrollbarWidth > 0) {
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      }
     }
-  });
 
-  const openButton = document.getElementById(`open-${id}`);
-  openButton?.addEventListener("click", () => {
-    dialog.showModal();
-  });
+    function closeModal() {
+      modal.setAttribute("data-open", "false");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+    }
 
-  const closeButton = document.getElementById(`close-${id}`);
-  closeButton?.addEventListener("click", () => {
-    dialog.close();
-  });
+    // Click on backdrop to close
+    backdrop?.addEventListener("click", closeModal);
 
-  // For debugging and styling, open the modal by default
-  // dialog.showModal();
+    // Click on close button to close
+    closeButton?.addEventListener("click", closeModal);
+
+    // Open button
+    const openButton = document.getElementById(`open-${id}`);
+    openButton?.addEventListener("click", openModal);
+
+    // Generic close button (if exists)
+    const genericCloseButton = document.getElementById(`close-${id}`);
+    genericCloseButton?.addEventListener("click", closeModal);
+
+    // ESC key to close
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.getAttribute("data-open") === "true") {
+        closeModal();
+      }
+    });
+  })();
 </script>
