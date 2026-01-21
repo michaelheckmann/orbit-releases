@@ -1,8 +1,8 @@
 # Privacy Policy for Orbit
 
-_Last updated: 24 April 2025_
+_Last updated: 21 January 2026_
 
-I respect your privacy and keep things as simple as possible. Below I explain what happens with your data when you visit my website or join the waitlist for Orbit.
+I respect your privacy and keep things as simple as possible. Below I explain what happens with your data when you visit my website or request early access for Orbit.
 
 ## 1. Who am I?
 
@@ -15,9 +15,9 @@ If you have privacy questions, write to [privacy@heckmann.app](mailto:privacy@he
 
 ## 2. What data do I collect?
 
-| Purpose  | Data                | When?                          |
-| -------- | ------------------- | ------------------------------ |
-| Waitlist | Your e-mail address | When you type it into the form |
+| Purpose              | Data                | When?                          |
+| -------------------- | ------------------- | ------------------------------ |
+| Request early access | Your e-mail address | When you type it into the form |
 
 I set **no cookies**, run **no analytics** and collect **no other personal data**.
 

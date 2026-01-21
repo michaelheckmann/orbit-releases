@@ -15,5 +15,14 @@ interface Props {
   <h2 class="ca-0.5 pb-4 text-4xl tracking-tight text-neutral-200">
     {Astro.props.title}
   </h2>
-  <p class="max-w-lg">{Astro.props.subtitle}</p>
+  <p
+    class:list={[
+      "max-w-lg",
+      "[&_a]:underline [&_a]:decoration-neutral-700 [&_a]:underline-offset-3 [&_a]:transition-colors [&_a]:outline-none",
+      "[&_a]:hover:text-neutral-300 [&_a]:focus-visible:text-neutral-300",
+      "[&_a]:hover:decoration-neutral-500",
+      "[&_a]:rounded-xs [&_a]:ring-neutral-500 [&_a]:ring-offset-4 [&_a]:ring-offset-neutral-900 [&_a]:focus-visible:ring-1",
+    ]}
+    set:html={Astro.props.subtitle}
+  />
 </div>
