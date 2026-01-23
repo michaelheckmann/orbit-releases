@@ -1,6 +1,10 @@
 ---
 import { cn } from "@/lib/utils";
 
+interface Props {
+  class?: string;
+}
+
 const navItems = [
   { label: "Product", href: "/#product" },
   { label: "Privacy", href: "/#privacy" },
@@ -9,7 +13,7 @@ const navItems = [
 ];
 ---
 
-<footer class="pt-32">
+<footer class={cn("pt-32", Astro.props.class)}>
   <div class="mx-auto max-w-6xl px-6 pb-8">
     <div
       class={cn(

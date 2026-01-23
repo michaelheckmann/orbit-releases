@@ -1,0 +1,94 @@
+---
+import { Octokit } from "@octokit/rest";
+
+import { cn } from "@/lib/utils";
+import AppIcon from "@/components/app-icon.astro";
+import Footer from "@/components/layout/footer.astro";
+import Layout from "@/components/layout/layout.astro";
+import Nav from "@/components/layout/nav.astro";
+
+const octokit = new Octokit({
+  auth: import.meta.env.GITHUB_TOKEN,
+});
+
+const { status, data: release } = await octokit.repos.getLatestRelease({
+  owner: "michaelheckmann",
+  repo: "orbit-releases",
+});
+
+if (status !== 200) {
+  throw new Error(`GitHub API responded with status ${status}`);
+}
+
+const version = release.tag_name;
+const dmgAsset = release.assets.find((asset) => asset.name.endsWith(".dmg"));
+
+if (!dmgAsset) {
+  throw new Error("No .dmg asset found in the latest release");
+}
+---
+
+<Layout
+  title="Orbit – Download Latest Release"
+  description="Download the latest version of Orbit for Mac. Privately record and search your Mac's screen history."
+  class="sm:h-screen [&_main]:flex [&_main]:h-full [&_main]:flex-col"
+>
+  <Nav />
+  <section
+    class={cn(
+      "mx-auto max-w-6xl flex-1 px-6",
+      "flex items-center justify-between gap-10",
+      "max-sm:flex-col max-sm:pt-20 max-sm:pb-12",
+      "max-md:items-center max-md:gap-14",
+    )}
+  >
+    <div
+      class={cn(
+        "flex shrink-0 flex-col items-start space-y-6",
+        "max-lg:shrink",
+      )}
+    >
+      <div>
+        <p
+          class="pb-2 font-mono text-sm tracking-[0.125rem] text-neutral-400 uppercase"
+        >
+          Download
+        </p>
+        <h2 class="ca-[1px] pb-4 text-4xl tracking-tight text-neutral-100">
+          Get Orbit
+        </h2>
+        <p class="max-w-lg pb-3">
+          Download the latest version ({version}) of Orbit for Mac.
+          <br />
+          Privately record and search your Mac's screen history with everything stored
+          locally on your device.
+        </p>
+        <p class="text-sm text-neutral-500">
+          Requires macOS 14.0+ (Sonoma) or later
+        </p>
+      </div>
+      <div class="flex items-center gap-1">
+        <a
+          href={dmgAsset.browser_download_url}
+          class={cn(
+            "relative cursor-pointer rounded-lg border border-neutral-800 bg-clip-padding px-7 py-2 align-middle",
+            "text-sm text-shadow-sm",
+            "shadow-xs inset-shadow-sm inset-shadow-white/2",
+            "bg-neutral-850",
+            "hover:bg-neutral-800",
+            "active:scale-[98%]",
+            "disabled:cursor-not-allowed disabled:border-neutral-900 disabled:bg-neutral-900 disabled:text-neutral-600",
+            "outline-none focus-visible:border-neutral-500",
+            "ease-snappy transition-all duration-200",
+            "min-w-40 whitespace-nowrap max-sm:w-full",
+          )}
+          download
+        >
+          Download for Apple Silicon
+        </a>
+      </div>
+    </div>
+    <AppIcon />
+  </section>
+  <Footer class="pt-0" />
+</Layout>

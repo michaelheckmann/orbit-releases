@@ -16,7 +16,14 @@ interface Props {
     </div>
     <h3 class="text-neutral-100">{Astro.props.title}</h3>
   </div>
-  <p class="text-pretty">
-    {Astro.props.description}
-  </p>
+  <p
+    class:list={[
+      "text-pretty",
+      "[&_a]:underline [&_a]:decoration-neutral-700 [&_a]:underline-offset-3 [&_a]:transition-colors [&_a]:outline-none",
+      "[&_a]:hover:text-neutral-300 [&_a]:focus-visible:text-neutral-300",
+      "[&_a]:hover:decoration-neutral-500",
+      "[&_a]:rounded-xs [&_a]:ring-neutral-500 [&_a]:ring-offset-4 [&_a]:ring-offset-neutral-900 [&_a]:focus-visible:ring-1",
+    ]}
+    set:html={Astro.props.description}
+  />
 </li>

@@ -22,7 +22,16 @@ import Accordion from "@/components/accordion.astro";
       Common questions
     </h2>
     <p class="max-w-lg text-balance">
-      If your question isn't answered here, please feel free to reach out to me
+      If your question isn't answered here, please feel free to
+      <a
+        href="mailto:hello@heckmann.app"
+        class:list={[
+          "underline decoration-neutral-700 underline-offset-3 transition-colors outline-none",
+          "hover:text-neutral-300 focus-visible:text-neutral-300",
+          "hover:decoration-neutral-500",
+          "rounded-xs ring-neutral-500 ring-offset-4 ring-offset-neutral-900 focus-visible:ring-1",
+        ]}>reach out to me</a
+      >
       directly.
     </p>
   </div>
