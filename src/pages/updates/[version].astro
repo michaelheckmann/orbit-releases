@@ -1,0 +1,162 @@
+---
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import type { GetStaticPathsOptions } from "astro";
+import { Octokit } from "@octokit/rest";
+import matter from "gray-matter";
+
+import { cn } from "@/lib/utils";
+import Footer from "@/components/layout/footer.astro";
+import Layout from "@/components/layout/layout.astro";
+import Nav from "@/components/layout/nav.astro";
+import ReleaseArticle from "@/components/release-article.astro";
+
+interface Release {
+  version: string;
+  date: string;
+  body: string;
+  url: string;
+  isPrerelease: boolean;
+  tagName: string;
+  override?: OverrideFrontmatter | null;
+}
+
+interface OverrideFrontmatter {
+  mode?: "replace" | "prefix" | "suffix" | "extend";
+  image?: string;
+  imageAlt?: string;
+}
+
+export async function getStaticPaths({}: GetStaticPathsOptions) {
+  // Helper function to check if a version is a patch (x.x.1+)
+  const isPatchVersion = (version: string): boolean => {
+    const match = version.match(/^v?(\d+)\.(\d+)\.(\d+)/);
+    if (!match) return false;
+    const [, , , patch] = match;
+    return parseInt(patch) > 0;
+  };
+
+  // Helper function to load override content if exists
+  const loadOverride = async (version: string) => {
+    try {
+      const overridePath = resolve(
+        process.cwd(),
+        "src/content/changelog-overrides",
+        `${version}.md`,
+      );
+      const fileContent = await readFile(overridePath, "utf-8");
+      const { data, content } = matter(fileContent);
+      return {
+        content,
+        frontmatter: data as OverrideFrontmatter,
+      };
+    } catch {
+      return null;
+    }
+  };
+
+  const octokit = new Octokit({
+    auth: import.meta.env.GITHUB_TOKEN,
+  });
+
+  // Fetch all releases
+  const { data: allReleases } = await octokit.repos.listReleases({
+    owner: "michaelheckmann",
+    repo: "orbit-releases",
+    per_page: 100,
+  });
+
+  // Filter out pre-releases and patch versions
+  const filteredReleases = await Promise.all(
+    allReleases
+      .filter((release) => !release.prerelease)
+      .filter((release) => !isPatchVersion(release.tag_name))
+      .map(async (release) => {
+        const override = await loadOverride(release.tag_name);
+        let finalBody = release.body || "";
+
+        // Apply override based on mode
+        if (override) {
+          const mode = override.frontmatter.mode || "prefix";
+          switch (mode) {
+            case "replace":
+              finalBody = override.content;
+              break;
+            case "prefix":
+              finalBody = `${override.content}\n\n${finalBody}`;
+              break;
+            case "suffix":
+              finalBody = `${finalBody}\n\n${override.content}`;
+              break;
+            case "extend":
+              finalBody = `${override.content}\n\n---\n\n${finalBody}`;
+              break;
+          }
+        }
+
+        return {
+          version: release.tag_name,
+          date: release.published_at || release.created_at,
+          body: finalBody,
+          url: release.html_url,
+          isPrerelease: release.prerelease,
+          tagName: release.tag_name,
+          override: override?.frontmatter || null,
+        };
+      }),
+  );
+
+  // Generate paths for each release
+  return filteredReleases.map((release) => ({
+    params: { version: release.tagName },
+    props: { release },
+  }));
+}
+
+interface Props {
+  release: Release;
+}
+
+const { release } = Astro.props;
+
+const formattedDate = new Date(release.date).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<Layout
+  title={`Orbit ${release.version} – Update`}
+  description={`View the ${formattedDate} update (${release.version}) for Orbit for Mac. See what's new, improvements, and changes in this release.`}
+>
+  <Nav />
+  <section class={cn("mx-auto max-w-4xl px-6", "py-24")}>
+    <div class="mb-8">
+      <a
+        href="/updates"
+        class={cn(
+          "inline-flex items-center gap-2 text-sm text-neutral-400 transition-colors hover:text-neutral-100",
+          "-ml-2 rounded-md px-2 py-1 ring-neutral-500 outline-none focus-visible:text-neutral-200 focus-visible:ring-1",
+        )}
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to all updates
+      </a>
+    </div>
+
+    <ReleaseArticle release={release} isDetailView={true} />
+  </section>
+  <Footer />
+</Layout>

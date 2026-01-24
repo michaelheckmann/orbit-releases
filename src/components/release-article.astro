@@ -1,0 +1,168 @@
+---
+import { marked } from "marked";
+
+import { cn } from "@/lib/utils";
+
+interface Release {
+  version: string;
+  date: string;
+  body: string;
+  url: string;
+  isPrerelease: boolean;
+  tagName: string;
+  override?: {
+    mode?: "replace" | "prefix" | "suffix" | "extend";
+    image?: string;
+    imageAlt?: string;
+  } | null;
+}
+
+interface Props {
+  release: Release;
+  isDetailView?: boolean;
+}
+
+const { release, isDetailView = false } = Astro.props;
+
+// Configure marked
+const renderer = new marked.Renderer();
+renderer.heading = ({ text, depth }) => {
+  if (depth === 2) return `<h3>${text}</h3>`;
+  return `<h${depth}>${text}</h${depth}>`;
+};
+
+marked.use({ renderer });
+marked.setOptions({ gfm: true, breaks: true });
+
+const formattedDate = new Date(release.date).toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+const htmlContent = marked.parse(release.body);
+---
+
+<article
+  id={release.tagName}
+  class={cn(
+    "grid grid-cols-1 gap-8 pb-12 md:grid-cols-4",
+    !isDetailView && "border-b border-neutral-800 last:border-0",
+  )}
+>
+  <div class="md:col-span-1">
+    <div class="static md:sticky md:top-24">
+      {
+        !isDetailView ? (
+          <a
+            href={`/updates/${release.tagName}`}
+            class="group -mt-1 -ml-2 block rounded-md px-2 py-1 ring-neutral-500 outline-none focus-visible:ring-1"
+          >
+            <time
+              datetime={release.date}
+              class="block text-lg font-medium tracking-tight text-neutral-100 transition-colors group-hover:text-neutral-300"
+            >
+              {formattedDate}
+            </time>
+            <h2 class="mt-1 font-mono text-sm text-neutral-500">
+              {release.version}
+            </h2>
+          </a>
+        ) : (
+          <>
+            <time
+              datetime={release.date}
+              class="block text-lg font-medium tracking-tight text-neutral-100"
+            >
+              {formattedDate}
+            </time>
+            <h2 class="mt-1 font-mono text-sm text-neutral-500">
+              {release.version}
+            </h2>
+          </>
+        )
+      }
+      {
+        isDetailView && (
+          <button
+            id="share-button"
+            class={cn(
+              "mt-4 inline-flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-1.5",
+              "text-sm text-neutral-300 transition-colors",
+              "hover:bg-neutral-800 hover:text-neutral-100",
+              "focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:outline-none",
+            )}
+          >
+            <svg
+              class="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+              />
+            </svg>
+            Share
+          </button>
+        )
+      }
+    </div>
+  </div>
+
+  <div class="md:col-span-3">
+    {
+      release.override?.image && (
+        <img
+          src={release.override.image}
+          alt={release.override.imageAlt || `${release.version} banner`}
+          class="mb-6 w-full rounded-lg border border-neutral-800"
+        />
+      )
+    }
+
+    <div
+      class:list={[
+        "prose max-w-none",
+        "[&_h1]:text-lg! [&_h2]:text-lg!",
+        "[&_a]:text-neutral-300 [&_a]:underline [&_a]:decoration-neutral-700 [&_a]:underline-offset-2",
+        "[&_a]:transition-colors hover:[&_a]:text-neutral-100 hover:[&_a]:decoration-neutral-500",
+        "[&_code]:rounded [&_code]:bg-neutral-900 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-neutral-300 [&_code]:before:content-none [&_code]:after:content-none",
+        "[&_pre]:rounded-lg [&_pre]:border [&_pre]:border-neutral-800 [&_pre]:bg-neutral-900",
+        "[&_ul]:list-disc [&_ul]:text-neutral-400",
+        "[&_ol]:list-decimal [&_ol]:text-neutral-400",
+        "[&_li]:text-neutral-400 [&_li]:marker:text-neutral-600",
+        "[&_blockquote]:border-l-neutral-700 [&_blockquote]:text-neutral-400",
+        "[&_img]:rounded-lg [&_img]:border [&_img]:border-neutral-800",
+        "[&_hr]:border-neutral-800",
+      ]}
+      set:html={htmlContent}
+    />
+  </div>
+</article>
+
+<script>
+  import { Toast } from "@/components/toast";
+
+  const shareButton = document.getElementById("share-button");
+  if (shareButton) {
+    shareButton.addEventListener("click", async () => {
+      const url = window.location.href;
+      try {
+        await navigator.clipboard.writeText(url);
+        new Toast("Link copied to clipboard", {
+          type: "default",
+          timeout: 3000,
+        });
+      } catch (err) {
+        console.error("Failed to copy:", err);
+        new Toast("Failed to copy link", {
+          type: "error",
+          timeout: 3000,
+        });
+      }
+    });
+  }
+</script>

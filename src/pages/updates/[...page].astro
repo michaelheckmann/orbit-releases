@@ -4,12 +4,12 @@ import { resolve } from "node:path";
 import type { GetStaticPathsOptions, Page } from "astro";
 import { Octokit } from "@octokit/rest";
 import matter from "gray-matter";
-import { marked } from "marked";
 
 import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/footer.astro";
 import Layout from "@/components/layout/layout.astro";
 import Nav from "@/components/layout/nav.astro";
+import ReleaseArticle from "@/components/release-article.astro";
 import Title from "@/components/title.astro";
 
 interface Release {
@@ -117,18 +117,6 @@ interface Props {
 }
 
 const { page } = Astro.props;
-
-// Configure marked
-// We need to make sure the New / Improved / Fixed headings are h3 instead of h2
-const renderer = new marked.Renderer();
-renderer.heading = ({ text, depth }) => {
-  if (depth === 2) return `<h3>${text}</h3>`;
-  return `<h${depth}>${text}</h${depth}>`;
-};
-
-marked.use({ renderer });
-// Configure marked for safe HTML rendering
-marked.setOptions({ gfm: true, breaks: true });
 ---
 
 <Layout
@@ -146,68 +134,7 @@ marked.setOptions({ gfm: true, breaks: true });
     </div>
 
     <div class="space-y-12">
-      {
-        page.data.map((release) => {
-          const formattedDate = new Date(release.date).toLocaleDateString(
-            "en-US",
-            {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            },
-          );
-          const htmlContent = marked.parse(release.body);
-
-          return (
-            <article class="grid grid-cols-1 gap-8 border-b border-neutral-800 pb-12 last:border-0 md:grid-cols-4">
-              <div class="md:col-span-1">
-                <div class="static md:sticky md:top-24">
-                  <time
-                    datetime={release.date}
-                    class="block text-lg font-medium tracking-tight text-neutral-100"
-                  >
-                    {formattedDate}
-                  </time>
-                  <h2 class="mt-1 font-mono text-sm text-neutral-500">
-                    {release.version}
-                  </h2>
-                </div>
-              </div>
-
-              <div class="md:col-span-3">
-                {/* Custom image from override */}
-                {release.override?.image && (
-                  <img
-                    src={release.override.image}
-                    alt={
-                      release.override.imageAlt || `${release.version} banner`
-                    }
-                    class="mb-6 w-full rounded-lg border border-neutral-800"
-                  />
-                )}
-
-                <div
-                  class:list={[
-                    "prose max-w-none",
-                    "[&_h1]:text-lg! [&_h2]:text-lg!",
-                    "[&_a]:text-neutral-300 [&_a]:underline [&_a]:decoration-neutral-700 [&_a]:underline-offset-2",
-                    "[&_a]:transition-colors hover:[&_a]:text-neutral-100 hover:[&_a]:decoration-neutral-500",
-                    "[&_code]:rounded [&_code]:bg-neutral-900 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-neutral-300 [&_code]:before:content-none [&_code]:after:content-none",
-                    "[&_pre]:rounded-lg [&_pre]:border [&_pre]:border-neutral-800 [&_pre]:bg-neutral-900",
-                    "[&_ul]:list-disc [&_ul]:text-neutral-400",
-                    "[&_ol]:list-decimal [&_ol]:text-neutral-400",
-                    "[&_li]:text-neutral-400 [&_li]:marker:text-neutral-600",
-                    "[&_blockquote]:border-l-neutral-700 [&_blockquote]:text-neutral-400",
-                    "[&_img]:rounded-lg [&_img]:border [&_img]:border-neutral-800",
-                    "[&_hr]:border-neutral-800",
-                  ]}
-                  set:html={htmlContent}
-                />
-              </div>
-            </article>
-          );
-        })
-      }
+      {page.data.map((release) => <ReleaseArticle release={release} />)}
     </div>
 
     <!-- Pagination -->
