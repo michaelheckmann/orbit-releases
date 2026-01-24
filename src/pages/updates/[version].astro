@@ -1,9 +1,7 @@
 ---
-import { readFile } from "node:fs/promises";
-import { resolve } from "node:path";
-import type { GetStaticPathsOptions } from "astro";
+import type { GetStaticPathsOptions, ImageMetadata } from "astro";
+import { getCollection } from "astro:content";
 import { Octokit } from "@octokit/rest";
-import matter from "gray-matter";
 
 import { cn } from "@/lib/utils";
 import Footer from "@/components/layout/footer.astro";
@@ -18,13 +16,12 @@ interface Release {
   url: string;
   isPrerelease: boolean;
   tagName: string;
-  override?: OverrideFrontmatter | null;
-}
-
-interface OverrideFrontmatter {
-  mode?: "replace" | "prefix" | "suffix" | "extend";
-  image?: string;
-  imageAlt?: string;
+  override?: {
+    mode?: "replace" | "prefix" | "suffix" | "extend";
+    image?: ImageMetadata;
+    imageAlt?: string;
+    body?: string;
+  } | null;
 }
 
 export async function getStaticPaths({}: GetStaticPathsOptions) {
@@ -34,25 +31,6 @@ export async function getStaticPaths({}: GetStaticPathsOptions) {
     if (!match) return false;
     const [, , , patch] = match;
     return parseInt(patch) > 0;
-  };
-
-  // Helper function to load override content if exists
-  const loadOverride = async (version: string) => {
-    try {
-      const overridePath = resolve(
-        process.cwd(),
-        "src/content/changelog-overrides",
-        `${version}.md`,
-      );
-      const fileContent = await readFile(overridePath, "utf-8");
-      const { data, content } = matter(fileContent);
-      return {
-        content,
-        frontmatter: data as OverrideFrontmatter,
-      };
-    } catch {
-      return null;
-    }
   };
 
   const octokit = new Octokit({
@@ -66,32 +44,51 @@ export async function getStaticPaths({}: GetStaticPathsOptions) {
     per_page: 100,
   });
 
+  // Get all changelog entries from the content collection
+  const changelogEntries = await getCollection("changelog");
+
   // Filter out pre-releases and patch versions
   const filteredReleases = await Promise.all(
     allReleases
       .filter((release) => !release.prerelease)
       .filter((release) => !isPatchVersion(release.tag_name))
       .map(async (release) => {
-        const override = await loadOverride(release.tag_name);
+        // Look for a changelog entry matching this version
+        const changelogEntry = changelogEntries.find(
+          (entry) => entry.id === release.tag_name.replace(/\./g, ""),
+        );
+
         let finalBody = release.body || "";
+        let overrideData = null;
 
         // Apply override based on mode
-        if (override) {
-          const mode = override.frontmatter.mode || "prefix";
+        if (changelogEntry) {
+          const mode = changelogEntry.data.mode || "prefix";
+
+          // Render the content to a string
+          const overrideContent = changelogEntry.body || "";
+
           switch (mode) {
             case "replace":
-              finalBody = override.content;
+              finalBody = overrideContent;
               break;
             case "prefix":
-              finalBody = `${override.content}\n\n${finalBody}`;
+              finalBody = `${overrideContent}\n\n${finalBody}`;
               break;
             case "suffix":
-              finalBody = `${finalBody}\n\n${override.content}`;
+              finalBody = `${finalBody}\n\n${overrideContent}`;
               break;
             case "extend":
-              finalBody = `${override.content}\n\n---\n\n${finalBody}`;
+              finalBody = `${overrideContent}\n\n---\n\n${finalBody}`;
               break;
           }
+
+          overrideData = {
+            mode: changelogEntry.data.mode,
+            image: changelogEntry.data.image,
+            imageAlt: changelogEntry.data.imageAlt,
+            body: overrideContent,
+          };
         }
 
         return {
@@ -101,7 +98,7 @@ export async function getStaticPaths({}: GetStaticPathsOptions) {
           url: release.html_url,
           isPrerelease: release.prerelease,
           tagName: release.tag_name,
-          override: override?.frontmatter || null,
+          override: overrideData,
         };
       }),
   );

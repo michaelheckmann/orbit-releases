@@ -1,4 +1,6 @@
 ---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import { marked } from "marked";
 
 import { cn } from "@/lib/utils";
@@ -12,8 +14,9 @@ interface Release {
   tagName: string;
   override?: {
     mode?: "replace" | "prefix" | "suffix" | "extend";
-    image?: string;
+    image?: ImageMetadata;
     imageAlt?: string;
+    body?: string;
   } | null;
 }
 
@@ -115,10 +118,12 @@ const htmlContent = marked.parse(release.body);
   <div class="md:col-span-3">
     {
       release.override?.image && (
-        <img
+        <Image
           src={release.override.image}
           alt={release.override.imageAlt || `${release.version} banner`}
-          class="mb-6 w-full rounded-lg border border-neutral-800"
+          class="mb-6 w-full rounded-lg shadow-lg"
+          loading="eager"
+          widths={[400, 800, 1200]}
         />
       )
     }

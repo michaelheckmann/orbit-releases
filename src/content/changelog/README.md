@@ -1,13 +1,13 @@
 # Changelog Customization Guide
 
-You can customize changelog entries by creating markdown files in `src/content/changelog-overrides/`.
+You can customize changelog entries by creating markdown files in `src/content/changelog/`. This directory is configured as an Astro content collection with proper type safety and asset resolution.
 
 ## Quick Start
 
 1. **Create a markdown file** named after the release version:
 
    ```
-   src/content/changelog-overrides/v1.0.0.md
+   src/content/changelog/v1.0.0.md
    ```
 
 2. **Add frontmatter** with customization options:
@@ -15,9 +15,8 @@ You can customize changelog entries by creating markdown files in `src/content/c
    ```markdown
    ---
    mode: "prefix"
-   image: "/images/changelog/v1.0.0-hero.png"
+   image: "../../assets/changelog/v1.0.0-hero.png"
    imageAlt: "Orbit 1.0.0 Release"
-   hideGithubLink: false
    ---
 
    Your custom markdown content here...
@@ -79,23 +78,61 @@ Controls how your custom content interacts with GitHub release notes:
 
 ### `image` (string, optional)
 
-Path to a hero image for this release:
+**Relative path** to a hero image for this release. Use a relative path from the markdown file to the asset:
 
 ```markdown
 ---
-image: "/images/changelog/v2.0.0-hero.png"
+image: "../../assets/changelog/v2.0.0-hero.png"
 imageAlt: "Orbit 2.0.0 Major Update"
 ---
 ```
 
-The image will appear prominently at the top of the release entry. Paths can be:
+The image will be:
 
-- Public folder: `/images/...` (relative to `public/`)
-- External: `https://...`
+- Automatically optimized by Astro
+- Type-checked at build time
+- Displayed prominently at the top of the release entry
+
+**Important**: Always use relative paths starting from the markdown file (e.g., `../../assets/changelog/...`). This enables Astro's image optimization and type safety.
 
 ### `imageAlt` (string, optional)
 
 Alternative text for the image. Defaults to `"{version} banner"` if not provided.
+
+## Image Asset Guidelines
+
+### Recommended Structure
+
+```
+src/
+├── assets/
+│   └── changelog/
+│       ├── v1.0.0-hero.png
+│       ├── v2.0.0-hero.png
+│       └── ...
+└── content/
+    └── changelog/
+        ├── v1.0.0.md
+        ├── v2.0.0.md
+        └── README.md
+```
+
+### Using Images
+
+Always use relative paths from the markdown file to the asset:
+
+```markdown
+---
+image: "../../assets/changelog/v1.0.0-hero.png"
+---
+```
+
+This gives you:
+
+- ✅ Automatic image optimization
+- ✅ Build-time validation
+- ✅ TypeScript type safety
+- ✅ Proper responsive images
 
 ## Examples
 
@@ -104,7 +141,7 @@ Alternative text for the image. Defaults to `"{version} banner"` if not provided
 ```markdown
 ---
 mode: "prefix"
-image: "/images/changelog/v1.0.0-hero.png"
+image: "../../assets/changelog/v1.0.0-hero.png"
 imageAlt: "Orbit 1.0.0 - Our biggest release yet"
 ---
 
@@ -130,7 +167,7 @@ This release represents a complete rewrite of our search engine, bringing:
 ```markdown
 ---
 mode: "replace"
-image: "/images/changelog/v2.0.0-announce.png"
+image: "../../assets/changelog/v2.0.0-announce.png"
 ---
 
 # Orbit 2.0: The Future of Screen Recording
@@ -195,7 +232,7 @@ Need help? [Contact support](mailto:support@reachorbit.app)
 ```markdown
 ---
 mode: "extend"
-image: "/images/changelog/v1.5.0-beta.png"
+image: "../../assets/changelog/v1.5.0-beta.png"
 ---
 
 ## 🧪 Beta Features
