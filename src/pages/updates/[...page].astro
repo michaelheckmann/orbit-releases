@@ -1,0 +1,286 @@
+---
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import type { GetStaticPathsOptions, Page } from "astro";
+import { Octokit } from "@octokit/rest";
+import matter from "gray-matter";
+import { marked } from "marked";
+
+import { cn } from "@/lib/utils";
+import Footer from "@/components/layout/footer.astro";
+import Layout from "@/components/layout/layout.astro";
+import Nav from "@/components/layout/nav.astro";
+import Title from "@/components/title.astro";
+
+interface Release {
+  version: string;
+  date: string;
+  body: string;
+  url: string;
+  isPrerelease: boolean;
+  tagName: string;
+  override?: OverrideFrontmatter | null;
+}
+
+interface OverrideFrontmatter {
+  mode?: "replace" | "prefix" | "suffix" | "extend";
+  image?: string;
+  imageAlt?: string;
+}
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const RELEASES_PER_PAGE = 10;
+
+  // Helper function to check if a version is a patch (x.x.1+)
+  const isPatchVersion = (version: string): boolean => {
+    const match = version.match(/^v?(\d+)\.(\d+)\.(\d+)/);
+    if (!match) return false;
+    const [, , , patch] = match;
+    return parseInt(patch) > 0;
+  };
+
+  // Helper function to load override content if exists
+  const loadOverride = async (version: string) => {
+    try {
+      const overridePath = resolve(
+        process.cwd(),
+        "src/content/changelog-overrides",
+        `${version}.md`,
+      );
+      const fileContent = await readFile(overridePath, "utf-8");
+      const { data, content } = matter(fileContent);
+      return {
+        content,
+        frontmatter: data as OverrideFrontmatter,
+      };
+    } catch {
+      return null;
+    }
+  };
+
+  const octokit = new Octokit({
+    auth: import.meta.env.GITHUB_TOKEN,
+  });
+
+  // Fetch all releases
+  const { data: allReleases } = await octokit.repos.listReleases({
+    owner: "michaelheckmann",
+    repo: "orbit-releases",
+    per_page: 100,
+  });
+
+  // Filter out pre-releases and patch versions
+  const filteredReleases = await Promise.all(
+    allReleases
+      .filter((release) => !release.prerelease)
+      .filter((release) => !isPatchVersion(release.tag_name))
+      .map(async (release) => {
+        const override = await loadOverride(release.tag_name);
+        let finalBody = release.body || "";
+
+        // Apply override based on mode
+        if (override) {
+          const mode = override.frontmatter.mode || "prefix";
+          switch (mode) {
+            case "replace":
+              finalBody = override.content;
+              break;
+            case "prefix":
+              finalBody = `${override.content}\n\n${finalBody}`;
+              break;
+            case "suffix":
+              finalBody = `${finalBody}\n\n${override.content}`;
+              break;
+            case "extend":
+              finalBody = `${override.content}\n\n---\n\n${finalBody}`;
+              break;
+          }
+        }
+
+        return {
+          version: release.tag_name,
+          date: release.published_at || release.created_at,
+          body: finalBody,
+          url: release.html_url,
+          isPrerelease: release.prerelease,
+          tagName: release.tag_name,
+          override: override?.frontmatter || null,
+        };
+      }),
+  );
+
+  return paginate(filteredReleases, { pageSize: RELEASES_PER_PAGE });
+}
+
+interface Props {
+  page: Page<Release>;
+}
+
+const { page } = Astro.props;
+
+// Configure marked
+// We need to make sure the New / Improved / Fixed headings are h3 instead of h2
+const renderer = new marked.Renderer();
+renderer.heading = ({ text, depth }) => {
+  if (depth === 2) return `<h3>${text}</h3>`;
+  return `<h${depth}>${text}</h${depth}>`;
+};
+
+marked.use({ renderer });
+// Configure marked for safe HTML rendering
+marked.setOptions({ gfm: true, breaks: true });
+---
+
+<Layout
+  title="Orbit – Updates"
+  description="View the full list of updates to Orbit for Mac. See all major and minor releases with detailed notes about new features, improvements, and changes."
+>
+  <Nav />
+  <section class={cn("mx-auto max-w-4xl px-6", "py-24")}>
+    <div class="pb-16">
+      <Title
+        eyebrow="Product Updates"
+        title="What's new?"
+        subtitle="Browse the updates I've shipped and see what's new. Your feedback drives these improvements and helps make Orbit better for everyone. <a href='https://x.com/mt_heckmann' target='_blank' rel='noopener'>Follow me on X</a> for more frequent updates."
+      />
+    </div>
+
+    <div class="space-y-12">
+      {
+        page.data.map((release) => {
+          const formattedDate = new Date(release.date).toLocaleDateString(
+            "en-US",
+            {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            },
+          );
+          const htmlContent = marked.parse(release.body);
+
+          return (
+            <article class="grid grid-cols-1 gap-8 border-b border-neutral-800 pb-12 last:border-0 md:grid-cols-4">
+              <div class="md:col-span-1">
+                <div class="static md:sticky md:top-24">
+                  <time
+                    datetime={release.date}
+                    class="block text-lg font-medium tracking-tight text-neutral-100"
+                  >
+                    {formattedDate}
+                  </time>
+                  <h2 class="mt-1 font-mono text-sm text-neutral-500">
+                    {release.version}
+                  </h2>
+                </div>
+              </div>
+
+              <div class="md:col-span-3">
+                {/* Custom image from override */}
+                {release.override?.image && (
+                  <img
+                    src={release.override.image}
+                    alt={
+                      release.override.imageAlt || `${release.version} banner`
+                    }
+                    class="mb-6 w-full rounded-lg border border-neutral-800"
+                  />
+                )}
+
+                <div
+                  class:list={[
+                    "prose max-w-none",
+                    "[&_h1]:text-lg! [&_h2]:text-lg!",
+                    "[&_a]:text-neutral-300 [&_a]:underline [&_a]:decoration-neutral-700 [&_a]:underline-offset-2",
+                    "[&_a]:transition-colors hover:[&_a]:text-neutral-100 hover:[&_a]:decoration-neutral-500",
+                    "[&_code]:rounded [&_code]:bg-neutral-900 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-neutral-300 [&_code]:before:content-none [&_code]:after:content-none",
+                    "[&_pre]:rounded-lg [&_pre]:border [&_pre]:border-neutral-800 [&_pre]:bg-neutral-900",
+                    "[&_ul]:list-disc [&_ul]:text-neutral-400",
+                    "[&_ol]:list-decimal [&_ol]:text-neutral-400",
+                    "[&_li]:text-neutral-400 [&_li]:marker:text-neutral-600",
+                    "[&_blockquote]:border-l-neutral-700 [&_blockquote]:text-neutral-400",
+                    "[&_img]:rounded-lg [&_img]:border [&_img]:border-neutral-800",
+                    "[&_hr]:border-neutral-800",
+                  ]}
+                  set:html={htmlContent}
+                />
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <!-- Pagination -->
+    {
+      (page.url.prev || page.url.next) && (
+        <nav
+          class="mt-16 flex items-center justify-between border-t border-neutral-800 pt-8"
+          aria-label="Pagination"
+        >
+          <div class="flex-1">
+            {page.url.prev && (
+              <a
+                href={page.url.prev}
+                class={cn(
+                  "inline-flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-2",
+                  "text-sm text-neutral-300 transition-colors",
+                  "hover:bg-neutral-800 hover:text-neutral-100",
+                  "focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:outline-none",
+                )}
+              >
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+                Previous
+              </a>
+            )}
+          </div>
+          <div class="flex items-center gap-2 text-sm text-neutral-500">
+            <span>
+              Page {page.currentPage} of {page.lastPage}
+            </span>
+          </div>
+          <div class="flex flex-1 justify-end">
+            {page.url.next && (
+              <a
+                href={page.url.next}
+                class={cn(
+                  "inline-flex items-center gap-2 rounded-lg border border-neutral-800 bg-neutral-900 px-4 py-2",
+                  "text-sm text-neutral-300 transition-colors",
+                  "hover:bg-neutral-800 hover:text-neutral-100",
+                  "focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:outline-none",
+                )}
+              >
+                Next
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </a>
+            )}
+          </div>
+        </nav>
+      )
+    }
+  </section>
+  <Footer />
+</Layout>

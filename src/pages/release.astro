@@ -6,6 +6,7 @@ import AppIcon from "@/components/app-icon.astro";
 import Footer from "@/components/layout/footer.astro";
 import Layout from "@/components/layout/layout.astro";
 import Nav from "@/components/layout/nav.astro";
+import Title from "@/components/title.astro";
 
 const octokit = new Octokit({
   auth: import.meta.env.GITHUB_TOKEN,
@@ -48,25 +49,16 @@ if (!dmgAsset) {
         "max-lg:shrink",
       )}
     >
-      <div>
-        <p
-          class="pb-2 font-mono text-sm tracking-[0.125rem] text-neutral-400 uppercase"
-        >
-          Download
-        </p>
-        <h2 class="ca-[1px] pb-4 text-4xl tracking-tight text-neutral-100">
-          Get Orbit
-        </h2>
+      <Title eyebrow="Download" title="Get Orbit">
         <p class="max-w-lg pb-3">
-          Download the latest version ({version}) of Orbit for Mac.
-          <br />
-          Privately record and search your Mac's screen history with everything stored
+          Download the latest version ({version}) of Orbit for Mac. Privately
+          record and search your Mac's screen history with everything stored
           locally on your device.
         </p>
         <p class="text-sm text-neutral-500">
           Requires macOS 14.0+ (Sonoma) or later
         </p>
-      </div>
+      </Title>
       <div class="flex items-center gap-1">
         <a
           href={dmgAsset.browser_download_url}

@@ -39,24 +39,37 @@ const navItems = [
         </div>
         <span> Orbit </span>
       </a>
-      <div class="hidden sm:block">
-        <div class="flex items-center space-x-6">
-          {
-            navItems.map(({ label, href }) => (
-              <a
-                href={href}
-                class={cn(
-                  "text-sm text-neutral-400",
-                  "ease-snappy transition-colors duration-200",
-                  "hover:text-neutral-200",
-                  "-ml-2 rounded-md px-2 py-1 ring-neutral-500 outline-none focus-visible:text-neutral-200 focus-visible:ring-1",
-                )}
-              >
-                {label}
-              </a>
-            ))
-          }
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:block">
+          <div class="flex items-center space-x-6">
+            {
+              navItems.map(({ label, href }) => (
+                <a
+                  href={href}
+                  class={cn(
+                    "text-sm text-neutral-400",
+                    "ease-snappy transition-colors duration-200",
+                    "hover:text-neutral-200",
+                    "-ml-2 rounded-md px-2 py-1 ring-neutral-500 outline-none focus-visible:text-neutral-200 focus-visible:ring-1",
+                  )}
+                >
+                  {label}
+                </a>
+              ))
+            }
+          </div>
         </div>
+        <a
+          href="/updates"
+          class={cn(
+            "text-sm text-neutral-400",
+            "ease-snappy transition-colors duration-200",
+            "hover:text-neutral-200",
+            "-ml-2 rounded-md px-2 py-1 ring-neutral-500 outline-none focus-visible:text-neutral-200 focus-visible:ring-1",
+          )}
+        >
+          Updates
+        </a>
       </div>
     </div>
   </div>
