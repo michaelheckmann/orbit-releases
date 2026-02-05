@@ -47,6 +47,15 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
     per_page: 100,
   });
 
+  // const { data } = await octokit.repos.getLatestRelease({
+  //   owner: "michaelheckmann",
+  //   repo: "orbit-releases",
+  //   mediaType: {
+  //     format: "raw",
+  //   },
+  // });
+  // console.log(data);
+
   // Get all changelog entries from the content collection
   const changelogEntries = await getCollection("changelog");
 

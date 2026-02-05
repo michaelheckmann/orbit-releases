@@ -1,0 +1,273 @@
+/* =========================================
+   1. Design Tokens (Orbit Palette)
+   ========================================= */
+html {
+  /* Orbit Neutrals */
+  --orbit-neutral-10: #fefefe;
+  --orbit-neutral-100: #f5f5f5;
+  --orbit-neutral-200: #e5e5e5;
+  --orbit-neutral-500: #737373;
+  --orbit-neutral-800: #262626;
+  --orbit-neutral-850: #1e1e1e;
+  --orbit-neutral-900: #171717;
+  --orbit-neutral-950: #0a0a0a;
+
+  /* Media Chrome Variable Overrides */
+  --media-primary-color: var(--orbit-neutral-100); /* Icons, Text */
+  --media-secondary-color: var(--orbit-neutral-950); /* Backgrounds */
+  --media-text-color: var(--orbit-neutral-200);
+  --media-icon-color: var(--orbit-neutral-200);
+
+  --media-control-background: transparent;
+  --media-control-hover-background: rgba(
+    255,
+    255,
+    255,
+    0.08
+  ); /* Subtle hover */
+
+  --media-font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+media-volume-range {
+  --media-range-track-background: #ffffff40 !important;
+}
+
+bunny-media-time-range {
+  --media-range-track-background: #ffffff20 !important;
+}
+
+/* =========================================
+   2. Large Center Play Button
+   ========================================= */
+media-controller media-play-button.large-play {
+  /* Shape & Size */
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50%; /* Circle */
+  transform: translate(-50%, -50%) scale(1.2);
+
+  /* Orbit Button Aesthetics (from button.astro) */
+  background: #00000050 !important;
+  border: 1px solid #ffffff20 !important;
+  color: var(--orbit-neutral-200) !important;
+
+  /* Shadow / Depth */
+  box-shadow:
+    0 1px 2px 0 rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.05) !important;
+
+  /* Transition */
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important; /* snappy ease */
+  backdrop-filter: blur(16px);
+}
+
+media-controller media-play-button.large-play:hover {
+  background: #00000070 !important; /* Darker on hover */
+  transform: translate(-50%, -50%) scale(1.25) !important; /* Slight grow */
+  color: var(--orbit-neutral-100) !important;
+  border-color: #ffffff30 !important;
+}
+
+/* Icon inside the large play button */
+media-controller media-play-button.large-play svg {
+  width: 46px !important;
+  height: 46px !important;
+}
+
+/* Hide potentially annoying tooltips - try multiple approaches */
+/* Standard tooltip classes */
+[part~="tooltip"],
+.tooltip,
+media-tooltip,
+[slot="tooltip"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* Target tooltip content via CSS variables */
+media-controller {
+  --media-tooltip-display: none;
+  --media-icon-color: var(
+    --orbit-neutral-200
+  ) !important; /* Ensure icons remain visible if tooltips are disabled */
+}
+
+/* Hide title attributes visually (though they may still appear) */
+media-play-button.large-play[title]::before,
+media-play-button.large-play[title]::after {
+  display: none !important;
+}
+
+/* =========================================
+   3. Control Bar & Layout
+   ========================================= */
+
+/* Bottom Gradient Protection */
+media-controller.has-controls::after {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8) 0%,
+    transparent 100%
+  ) !important;
+  height: 80px !important; /* Tighter gradient */
+}
+
+/* The Bar Containers */
+media-control-bar,
+bunny-media-control-bar {
+  padding: 0 16px 12px 16px !important; /* Add some breathing room at bottom */
+}
+
+/* Control Buttons (Play, Mute, Settings, etc.) */
+media-control-bar
+  :is(
+    media-play-button:not(.large-play),
+    media-seek-backward-button,
+    media-seek-forward-button,
+    media-mute-button,
+    media-pip-button,
+    media-fullscreen-button,
+    media-captions-button,
+    media-airplay-button,
+    media-cast-button,
+    media-settings-menu-button,
+    bunny-settings-menu-button
+  ) {
+  border-radius: 6px !important;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+media-control-bar
+  :is(
+    media-play-button:not(.large-play),
+    media-seek-backward-button,
+    media-seek-forward-button,
+    media-mute-button,
+    media-pip-button,
+    media-fullscreen-button,
+    media-captions-button,
+    media-airplay-button,
+    media-cast-button,
+    media-settings-menu-button,
+    bunny-settings-menu-button
+  ):hover {
+  color: var(--orbit-neutral-10);
+  background-color: var(--media-control-hover-background) !important;
+}
+
+/* =========================================
+   4. Time Range (Progress Bar)
+   ========================================= */
+bunny-media-time-range {
+  --media-range-bar-color: var(
+    --orbit-neutral-100
+  ) !important; /* The filled progress */
+  --media-range-track-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ) !important; /* The unplayed track */
+  --media-range-thumb-background: var(
+    --orbit-neutral-10
+  ) !important; /* The draggable dot */
+
+  /* Hover preview box */
+  --media-preview-background: var(--orbit-neutral-900) !important;
+  --media-preview-text-color: var(--orbit-neutral-200) !important;
+  --media-box-border-radius: 6px !important;
+  --media-box-padding-left: 8px !important;
+  --media-box-padding-right: 8px !important;
+
+  /* Clean up hover states ("big bar around slider") */
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+/* Volume Slider */
+media-volume-range {
+  --media-range-bar-color: var(--orbit-neutral-200) !important;
+  --media-range-track-color: var(
+    --orbit-neutral-500
+  ) !important; /* More visible track */
+  --media-range-thumb-background: var(--orbit-neutral-10) !important;
+}
+
+/* =========================================
+   5. Settings Menu (Quality, Speed)
+   ========================================= */
+media-settings-menu,
+bunny-settings-menu,
+media-playback-rate-menu,
+bunny-rendition-menu {
+  background: rgba(23, 23, 23, 0.95) !important; /* neutral-900 with opacity */
+  border: 1px solid var(--orbit-neutral-800) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  padding: 6px !important;
+  min-width: 180px !important;
+
+  /* Offset from edge */
+  transform: translateX(-12px) translateY(-12px) !important;
+}
+
+/* Menu Items */
+media-settings-menu-item,
+bunny-settings-menu-item {
+  font-family: var(--media-font-family);
+  font-size: 13px !important;
+  color: var(--orbit-neutral-400) !important; /* Dimmed text */
+  border-radius: 4px !important;
+  margin-bottom: 2px;
+  padding: 8px 12px !important;
+  transition: background-color 0.1s ease;
+}
+
+media-settings-menu-item:hover,
+bunny-settings-menu-item:hover {
+  background: var(--orbit-neutral-800) !important;
+  color: var(--orbit-neutral-10) !important;
+}
+
+media-control-bar
+  :is(
+    media-play-button:not(.large-play),
+    media-seek-backward-button,
+    media-seek-forward-button,
+    media-mute-button,
+    media-pip-button,
+    media-fullscreen-button,
+    media-captions-button,
+    media-cast-button,
+    media-airplay-button,
+    media-settings-menu-button,
+    bunny-settings-menu-button,
+    media-time-display
+  ),
+bunny-media-control-bar
+  :is(
+    media-play-button:not(.large-play),
+    media-seek-backward-button,
+    media-seek-forward-button,
+    media-mute-button,
+    media-pip-button,
+    media-fullscreen-button,
+    media-captions-button,
+    media-cast-button,
+    media-airplay-button,
+    media-settings-menu-button,
+    bunny-settings-menu-button,
+    media-time-display
+  ) {
+  border-radius: 6px !important;
+}

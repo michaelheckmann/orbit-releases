@@ -1,9 +1,6 @@
 ---
-import { Image } from "astro:assets";
-
 import { cn } from "@/lib/utils";
 import CTAForm from "@/components/cta-form.astro";
-import heroImage from "@/assets/hero.webp";
 ---
 
 <section class={cn("mx-auto max-w-6xl px-6", "space-y-6 pt-24")}>
@@ -39,12 +36,14 @@ import heroImage from "@/assets/hero.webp";
       "motion-opacity-in-50 motion-blur-in-xl motion-translate-y-in-[15%] motion-duration-500 motion-delay-100",
     )}
   >
-    <Image
-      src={heroImage}
-      alt="A screenshot of the 'Orbit' app interface displaying a timeline of recorded screen activity with various thumbnails."
-      class="w-full rounded-xl shadow-xl"
-      layout="full-width"
-      priority
-    />
+    <div style="position:relative;padding-top:56.25%;" class="w-full">
+      <iframe
+        title="Orbit Demo: Screen History Search"
+        src="https://player.mediadelivery.net/embed/592567/c0b62e87-4f5e-4cf7-9471-bc2362b2abc1?autoplay=false&loop=false&muted=false&preload=true&responsive=true"
+        loading="lazy"
+        style="border:0;position:absolute;top:0;height:100%;width:100%;"
+        allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture;"
+        allowfullscreen="true"></iframe>
+    </div>
   </div>
 </section>
