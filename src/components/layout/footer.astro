@@ -11,6 +11,10 @@ const navItems = [
   { label: "Early Access", href: "/#early-access" },
   { label: "FAQ", href: "/#faq" },
   { label: "Updates", href: "/updates" },
+  {
+    label: "Documentation",
+    href: "https://www.notion.so/heckmann/Orbit-Documentation-313f2fdf8cd38051a3cada3c5c36fa87?source=copy_link",
+  },
 ];
 ---
 
@@ -19,7 +23,7 @@ const navItems = [
     <div
       class={cn(
         "flex flex-col items-start gap-6",
-        "sm:flex-row sm:items-center sm:justify-between",
+        "md:flex-row md:items-center md:justify-between",
       )}
     >
       <a
@@ -43,6 +47,8 @@ const navItems = [
           navItems.map(({ label, href }) => (
             <a
               href={href}
+              target={href.startsWith("http") ? "_blank" : undefined}
+              rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
               class={cn(
                 "w-fit text-sm text-neutral-400",
                 "ease-snappy transition-colors duration-200",
