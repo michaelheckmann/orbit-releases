@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://reachorbit.app/sitemap-index.xml
+Sitemap: https://memorymachine.app/sitemap-index.xml

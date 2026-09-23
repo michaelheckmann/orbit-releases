@@ -5,6 +5,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "orbit-website",
+  "workers_dev": false,
   "main": "./dist/_worker.js/index.js",
   "compatibility_date": "2025-04-23",
   "compatibility_flags": ["nodejs_compat"],

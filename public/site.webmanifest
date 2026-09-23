@@ -1,6 +1,6 @@
 {
-  "name": "Orbit",
-  "short_name": "Orbit",
+  "name": "Memory Machine",
+  "short_name": "M:M",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#171717",
+  "background_color": "#171717",
   "display": "standalone"
 }

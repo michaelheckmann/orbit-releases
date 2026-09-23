@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://reachorbit.app",
+  site: "https://memorymachine.app",
   adapter: cloudflare({
     imageService: "compile",
     platformProxy: {

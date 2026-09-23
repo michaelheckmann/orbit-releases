@@ -2,7 +2,6 @@
 import { Image } from "astro:assets";
 
 import { cn } from "@/lib/utils";
-import appIconImage from "@/assets/app-icon.png";
 import iconBlueprint from "@/assets/icon-blueprint.png";
 ---
 
@@ -33,16 +32,18 @@ import iconBlueprint from "@/assets/icon-blueprint.png";
     <div class="absolute inset-0 p-4 opacity-50">
       <Image
         src={iconBlueprint}
-        alt="An abstract graphic featuring geometric shapes and grid lines. The design includes a combination of circles and arcs."
+        alt=""
+        aria-hidden="true"
         layout="constrained"
         class="size-full grayscale"
       />
     </div>
     <div class="relative top-2 z-10 size-4/5 object-contain">
-      <Image
-        src={appIconImage}
-        alt="An icon representing the 'Orbit' app, featuring a stylized blue and white design."
-        layout="constrained"
+      <img
+        src="/app-icon.png"
+        alt="The Memory Machine app icon."
+        width="576"
+        height="576"
         class="size-full object-contain"
       />
     </div>

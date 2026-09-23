@@ -1,17 +1,11 @@
 ---
 interface Props {
-  eyebrow: string;
   title: string;
   subtitle?: string;
 }
 ---
 
-<div>
-  <p
-    class="pb-2 font-mono text-sm tracking-[0.125rem] text-neutral-400 uppercase"
-  >
-    {Astro.props.eyebrow}
-  </p>
+<div class="pt-4">
   <h2 class="ca-0.5 pb-3.5 text-4xl tracking-tight text-neutral-200">
     {Astro.props.title}
   </h2>

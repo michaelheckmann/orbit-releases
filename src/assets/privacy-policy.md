@@ -1,8 +1,8 @@
-# Privacy Policy for Orbit
+# Privacy Policy for Memory Machine
 
 _Last updated: 21 January 2026_
 
-I respect your privacy and keep things as simple as possible. Below I explain what happens with your data when you visit my website or request early access for Orbit.
+I respect your privacy and keep things as simple as possible. Below I explain what happens with your data when you visit my website or request early access for Memory Machine.
 
 ## 1. Who am I?
 
@@ -23,7 +23,7 @@ I set **no cookies**, run **no analytics** and collect **no other personal data*
 
 ## 3. Why may I process this data?
 
-I use your e-mail address solely to invite you to Orbit.  
+I use your e-mail address solely to invite you to Memory Machine.  
 Legal basis: Art. 6 (1) (b) GDPR – taking steps at your request before a contract.
 
 ## 4. How long do I keep the data?
