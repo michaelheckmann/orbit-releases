@@ -1,7 +1,9 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
-import { createClient } from "@supabase/supabase-js";
-import { Resend } from "resend";
+import { EmailMessage } from "cloudflare:email";
+
+const notificationFrom = "waitlist@notify.memorymachine.app";
+const notificationTo = "michael@heckmann.app";
 
 export const server = {
   joinWaitlist: defineAction({
@@ -19,32 +21,35 @@ export const server = {
         throw new Error("Rate limit exceeded");
       }
 
-      const supabase = createClient(env.SUPABASE_URL, env.SUPABASE_SECRET_KEY);
-      // Make sure you have a table with the name "waitlist" and a column "email" in your Supabase database
-      const res = await supabase.from("waitlist").insert({ email });
+      const createdAt = new Date().toISOString();
+      await env.WAITLIST.put(
+        `signup:${crypto.randomUUID()}`,
+        JSON.stringify({ email, createdAt }),
+      );
 
-      if (res.error) {
-        throw new Error(res.error.message);
-      }
-
-      if (res.status !== 201) {
-        throw new Error("Failed to join the waitlist");
-      }
-
-      // Send confirmation email non-blocking
+      // Send the internal signup notification without delaying the response.
       context.locals.runtime.ctx.waitUntil(
         (async () => {
           try {
-            const resend = new Resend(env.RESEND_API_KEY);
-            await resend.emails.send({
-              from: env.RESEND_SENDER_EMAIL,
-              to: env.RESEND_RECEIVER_EMAIL,
-              subject: "New Waitlist Signup",
-              html: `<p>New user joined the waitlist:</p><p><strong>Email:</strong> ${email}</p><p><strong>Time:</strong> ${new Date().toLocaleString()}</p>`,
-            });
+            const message = new EmailMessage(
+              notificationFrom,
+              notificationTo,
+              [
+                `From: ${notificationFrom}`,
+                `To: ${notificationTo}`,
+                "Subject: New Waitlist Signup",
+                "MIME-Version: 1.0",
+                "Content-Type: text/plain; charset=UTF-8",
+                "Content-Transfer-Encoding: 8bit",
+                "",
+                "New user joined the waitlist:",
+                `Email: ${email}`,
+                `Time: ${createdAt}`,
+              ].join("\r\n"),
+            );
+            await env.WAITLIST_EMAIL.send(message);
           } catch (error) {
-            // Log error but don't fail the request
-            console.error("Failed to send email:", error);
+            console.error("Failed to send waitlist notification:", error);
           }
         })(),
       );

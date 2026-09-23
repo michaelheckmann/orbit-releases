@@ -16,6 +16,19 @@
   "observability": {
     "enabled": true,
   },
+  "kv_namespaces": [
+    {
+      "binding": "WAITLIST",
+      "id": "471b158a4c624ca695c2897ac3e5fcb9",
+    },
+  ],
+  "send_email": [
+    {
+      "name": "WAITLIST_EMAIL",
+      "destination_address": "michael@heckmann.app",
+      "allowed_sender_addresses": ["waitlist@notify.memorymachine.app"],
+    },
+  ],
   "unsafe": {
     "bindings": [
       {
