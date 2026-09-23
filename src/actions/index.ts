@@ -35,7 +35,7 @@ export const server = {
               notificationFrom,
               notificationTo,
               [
-                `From: ${notificationFrom}`,
+                `From: Memory Machine Waitlist <${notificationFrom}>`,
                 `To: ${notificationTo}`,
                 "Subject: New Waitlist Signup",
                 "MIME-Version: 1.0",
